@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: dvwa_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: dvwa
+      MYSQL_USER: dvwa
+      MYSQL_PASSWORD: dvwa
+    volumes:
+      - dvwa_db_data:/var/lib/mysql
+
+  dvwa:
+    image: vulnerables/web-dvwa:latest
+    container_name: dvwa_app
+    depends_on:
+      - db
+    ports:
+      - "9090:80"          # доступ до DVWA: http://localhost:8080
+    environment:
+      # якщо образ підтримує змінні — цього достатньо; інакше ми підмонтуємо код нижче
+      MYSQL_HOST: db
+      MYSQL_USER: dvwa
+      MYSQL_PASSWORD: dvwa
+      MYSQL_DATABASE: dvwa
+    volumes:
+      - ./dvwa-src:/var/www/html:rw   # монтуємо локальний клон репо, щоб мати доступ до коду для SAST
+
+volumes:
+  dvwa_db_data:

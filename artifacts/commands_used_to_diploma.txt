@@ -1,0 +1,19 @@
+semgrep --config=p/security-audit --config=p/owasp-top-ten --config=p/javascript --sarif --output=results123.sarif ~/Diplomas/juice-shop-src
+        
+          ls
+	 results123.sarif
+	 # ensure utf-8 output so no encoding errors
+	 export LC_ALL=en_US.UTF-8
+	 export LANG=en_US.UTF-8
+	 export PYTHONIOENCODING=utf-8
+	 # run normalizer
+	 python3 ~/Diplomas/scripts/normalize_sarif.py   --input ~/Diplomas/results123.sarif   --output ~/Diplomas/results123.csv
+	 libreoffice results123.csv
+	 # file sizes
+	 ls -lh ~/Diplomas/results123.sarif ~/Diplomas/results123.csv
+	 # preview CSV head (first 5 lines)
+	 head -n 5 ~/Diplomas/results123.csv
+	 # count rows (including header)
+	 wc -l ~/Diplomas/results123.csv^
+The commands were executed on Ubuntu 22.04, with Semgrep v1 and Python 3.10.
+

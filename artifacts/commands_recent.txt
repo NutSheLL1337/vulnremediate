@@ -1,0 +1,200 @@
+   38  v
+   39  hostname -I
+   40  ip -4 addr show
+   41  hotname -I
+   42  hostname -I
+   43  docker ps --format "{{.Names}}\t{{.Ports}}"
+   44  # find the manager container name (e.g. single-node_wazuh.manager_1)
+   45  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' single-node_wazuh.manager_1
+   46  sudo docker ps --format "{{.Names}}\t{{.Ports}}"
+   47  # find the manager container name (e.g. single-node_wazuh.manager_1)
+   48  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' single-node_wazuh.manager_1
+   49  sudo docker ps --format "{{.Names}}\t{{.Ports}}"
+   50  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' single-node_wazuh.manager_1
+   51  sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' single-node_wazuh.manager_1
+   52  hostname -I
+   53  ip a
+   54  ip -4 addr show
+   55  # or a concise:
+   56  hostname -I
+   57  mkdir -p ~/www_demo
+   58  echo "demo payload" > ~/www_demo/malicious.exe
+   59  cd ~/www_demo
+   60  # serve on host-only IP, port 8000
+   61  python3 -m http.server 8000 --bind 0.0.0.0
+   62  echo "demo ps1 payload" > ~/www_demo/payload.ps1
+   63  ls
+   64  python3 -m http.server 8000 --bind 0.0.0.0
+   65  sudo ip addr add 192.168.56.103/24 dev enp0s8
+   66  vboxuser@ubuntu-wazuh:~$ sudo ip link set enp0s8 up 
+   67  sudo ip addr add 192.168.56.104/24 dev enp0s8
+   68  sudo ip link set enp0s8 up
+   69  ip a
+   70  ping 192.168.56.102
+   71  ping 192.168.56.104
+   72  ls
+   73  cd wazuh-docker/single-node/
+   74  ls
+   75  docer-compose up -d
+   76  dokcer-compose up -d
+   77  docker-compose up -d
+   78  sudo docker-compose up -d
+   79  docker inspect -f '{{.Name}} {{range $k,$v := .NetworkSettings.Ports}}{{$k}} -> {{(index $v 0).HostPort}}; {{end}}' single-node_wazuh.manager_1
+   80  sudo docker inspect -f '{{.Name}} {{range $k,$v := .NetworkSettings.Ports}}{{$k}} -> {{(index $v 0).HostPort}}; {{end}}' single-node_wazuh.manager_1
+   81  docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}"
+   82  sudo docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}"
+   83  sudo ufw status verbose || sudo iptables -L -n
+   84  sudo ss -lntup | egrep '1514|1515|55000|5601|9200' || true
+   85  docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}"
+   86  sudo docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}"
+   87  docker inspect -f '{{.Name}} {{range $k,$v := .NetworkSettings.Ports}}{{$k}} -> {{(index $v 0).HostPort}}; {{end}}' single-node_wazuh.manager_1
+   88  sudo docker inspect -f '{{.Name}} {{range $k,$v := .NetworkSettings.Ports}}{{$k}} -> {{(index $v 0).HostPort}}; {{end}}' single-node_wazuh.manager_1
+   89  docker ps --format "{{.Names}}\t{{.Ports}}"
+   90  # find the manager container name (e.g. single-node_wazuh.manager_1)
+   91  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' single-node_wazuh.manager_1
+   92  sudo docker ps --format "{{.Names}}\t{{.Ports}}"
+   93  # find the manager container name (e.g. single-node_wazuh.manager_1)
+   94  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' single-node_wazuh.manager_1
+   95  sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' single-node_wazuh.manager_1
+   96  docker ps
+   97  sudo su
+   98  ls
+   99  mkdir Diplomas
+  100  ls
+  101  cd Diplomas/
+  102  ls
+  103  sudo lsof -i :3000
+  104  sudo lsof -i :8080
+  105  sudo lsof -i :3000
+  106  sudo lsof -i :8080
+  107  ss -tulnp | grep -E '3000|8080'
+  108  # основна команда — підстав свій шлях замість ~/Diplomas/juice-shop-src якщо потрібно
+  109  PYTHONIOENCODING=utf-8 semgrep --config=auto --all-files   --include '**/*.{ts,js,tsx,jsx,py,java,go}'   --sarif --output=~/Diplomas/results_auto.sarif   ~/Diplomas/juice-shop-src   --verbose 2>&1 | tee ~/Diplomas/semgrep_auto.log
+  110  semgrep --config=auto --all-files   --include '**/*.{ts,js,tsx,jsx,py,java,go}'   --sarif --output=~/Diplomas/results_auto.sarif   ~/Diplomas/juice-shop-src   --verbose 2>&1 | tee ~/Diplomas/semgrep_auto.log
+  111  ls
+  112  semgrep --config=auto --all-files   --include '**/*.{ts,js,tsx,jsx,py,java,go}'   --sarif --output=~/Diplomas/results_auto.sarif   ~/Diplomas/juice-shop-src \
+  113  semgrep --config=auto --all-files   --include '**/*.{ts,js,tsx,jsx,py,java,go}'   --sarif --output=~/Diplomas/results_auto.sarif   ~/Diplomas/juice-shop-src
+  114  semgrep --config=auto --include '**/*.{ts,js,tsx,jsx,py,java,go}'   --sarif --output=~/Diplomas/results_auto.sarif   ~/Diplomas/juice-shop-src
+  115  # в одній сесії (bash)
+  116  export LC_ALL=en_US.UTF-8
+  117  export LANG=en_US.UTF-8
+  118  export PYTHONIOENCODING=utf-8
+  119  semgrep --config=auto   --include '**/*.{ts,js,tsx,jsx,py,java,go}'   --sarif --output=~/Diplomas/results_auto.sarif   ~/Diplomas/juice-shop-src
+  120  ls
+  121  libreoffice vulnerabilities.csv 
+  122  semgrep --config=p/security-audit --config=p/owasp-top-ten --config=p/javascript --sarif --output=results123.sarif ~/Diplomas/juice-shop-src
+  123  ls
+  124  results123.sarif
+  125  # ensure utf-8 output so no encoding errors
+  126  export LC_ALL=en_US.UTF-8
+  127  export LANG=en_US.UTF-8
+  128  export PYTHONIOENCODING=utf-8
+  129  # run normalizer
+  130  python3 ~/Diplomas/scripts/normalize_sarif.py   --input ~/Diplomas/results123.sarif   --output ~/Diplomas/results123.csv
+  131  libreoffice results123.csv
+  132  # file sizes
+  133  ls -lh ~/Diplomas/results123.sarif ~/Diplomas/results123.csv
+  134  # preview CSV head (first 50 lines)
+  135  head -n 5 ~/Diplomas/results123.csv
+  136  # count rows (including header)
+  137  wc -l ~/Diplomas/results123.csv
+  138  # save last 4 executed commands
+  139  fc -ln -4 > ~/Diplomas/commands_used.txt
+  140  # view saved file
+  141  cat ~/Diplomas/commands_used.txt
+  142  fc -ln -12 > ~/Diplomas/commands_used.txt
+  143  cat ~/Diplomas/commands_used.txt
+  144  fc -ln -25 > ~/Diplomas/commands_used.txt
+  145  cat ~/Diplomas/commands_used.txt
+  146  nano commands_used.txt 
+  147  fg
+  148  ls -lh results123.sarif
+  149  head -n 1 results123.sarif
+  150  ls
+  151  nano commands_used_to_diploma.txt 
+  152  head -n 30 ~/Diplomas/results123.csv
+  153  cat ~/Diplomas/commands_used.txt  # after you saved it with fc or history
+  154  ip a
+  155  sudo systemctl enable ssh
+  156  sudo systemctl start ssh
+  157  systemctl status ssh
+  158  scp vboxuser@192.168.250.4:/home/Diplomas/ "C:\Users\holna\Documents\ShareX\Screenshots\Diplomas"
+  159  ls
+  160  cd scripts/
+  161  ls
+  162  sudo systemctl stop ssh
+  163  sudo systemctl disable ssh
+  164  cd ~/Diplomas
+  165  # клонувати оригінальний репо (якщо вже клоновано, пропусти)
+  166  git clone https://github.com/digininja/DVWA dvwa-src
+  167  ls -la dvwa-src
+  168  ls
+  169  touch docker-compose-dvwa.yml
+  170  nano docker-compose-dvwa.yml 
+  171  # перевірити, чи вільний порт 8080
+  172  ss -tulpn | grep -E ':(8080)\b' || echo "8080 вільний"
+  173  nano docker-compose-dvwa.yml 
+  174  cd ~/Diplomas
+  175  docker-compose -f docker-compose-dvwa.yml up -d
+  176  sudo docker-compose -f docker-compose-dvwa.yml up -d
+  177  docker-compose -f docker-compose-dvwa.yml ps
+  178  sudo docker-compose -f docker-compose-dvwa.yml ps
+  179  http://localhost:9090/setup.php
+  180  cd ~/Diplomas/dvwa-src
+  181  # зробимо резервну копію на всяк випадок
+  182  cp -n config/config.inc.php.dist config/config.inc.php || echo "config.inc.php вже існує або нема config.inc.php.dist"
+  183  ls
+  184  nano config/config.inc.php
+  185  # зайти в контейнер додатку (ім'я в docker-compose: dvwa_app у моєму прикладі)
+  186  docker exec -it dvwa_app bash -c "ls -l /var/www/html/config && sed -n '1,200p' /var/www/html/config/config.inc.php"
+  187  sudo # зайти в контейнер додатку (ім'я в docker-compose: dvwa_app у моєму прикладі)
+  188  docker exec -it dvwa_app bash -c "ls -l /var/www/html/config && sed -n '1,200p' /var/www/html/config/config.inc.php"
+  189  # на хості:
+  190  sudo chown -R $USER:$USER ~/Diplomas/dvwa-src/config
+  191  sudo chmod 644 ~/Diplomas/dvwa-src/config/config.inc.php
+  192  sudo # зайти в контейнер додатку (ім'я в docker-compose: dvwa_app у моєму прикладі)
+  193  docker exec -it dvwa_app bash -c "ls -l /var/www/html/config && sed -n '1,200p' /var/www/html/config/config.inc.php"
+  194  nano config/config.inc.php
+  195  docker-compose -f ~/Diplomas/docker-compose-dvwa.yml logs dvwa_app --tail=200
+  196  docker-compose -f ~/Diplomas/docker-compose-dvwa.yml logs db --tail=200
+  197  docker ps
+  198  sudo docker ps
+  199  docker exec -it dvwa_db bash
+  200  # всередині контейнера:
+  201  mysql -u root -prootpassword -e "CREATE DATABASE IF NOT EXISTS dvwa; GRANT ALL ON dvwa.* TO 'dvwa'@'%' IDENTIFIED BY 'dvwa'; FLUSH PRIVILEGES;"
+  202  exit
+  203  sudo docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
+  204  sudo docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' dvwa_db
+  205  nano config/config.inc.php
+  206  sudo docker exec -it dvwa_db mysql -u root -pdvwa -e "SELECT User,Host FROM mysql.user ORDER BY User,Host;"
+  207  sudo docker exec -it dvwa_db mysql -u root -dvwa -e "SELECT User,Host FROM mysql.user ORDER BY User,Host;"
+  208  sudo docker exec -it dvwa_db mysql -u root -p dvwa -e "SELECT User,Host FROM mysql.user ORDER BY User,Host;"
+  209  sudo docker exec -it dvwa_db mysql -u root -p dvwa -e "
+CREATE DATABASE IF NOT EXISTS dvwa;
+CREATE USER IF NOT EXISTS 'dvwa'@'%' IDENTIFIED BY 'dvwa';
+GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa'@'%';
+CREATE USER IF NOT EXISTS 'dvwa'@'localhost' IDENTIFIED BY 'dvwa';
+GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa'@'localhost';
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR 'dvwa'@'%';
+SHOW GRANTS FOR 'dvwa'@'localhost';
+"
+  210  cd ~/Diplomas
+  211  sudo docker-compose -f docker-compose-dvwa.yml restart db dvwa
+  212  # покажи рядки з DB конфігу (виведи 20-40 рядків щоб побачити змінні)
+  213  sed -n '1,200p' ~/Diplomas/dvwa-src/config/config.inc.php | sed -n '1,200p'
+  214  # або конкретно:
+  215  grep -n -E "DB_HOST|DB_USER|DB_PASSWORD|DB_NAME|DB_PORT" ~/Diplomas/dvwa-src/config/config.inc.php || true
+  216  # Дізнатись ім'я контейнера БД, якщо не впевнений:
+  217  sudo docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
+  218  # Потім (заміни dvwa_db на реальну назву контейнера, якщо інша)
+  219  sudo docker exec -it dvwa_db mysql -u root -p -e "SELECT User,Host,plugin FROM mysql.user WHERE User='dvwa'\G"
+  220  sudo docker exec -it dvwa_db mysql -u root -p -e "
+ALTER USER 'dvwa'@'%' IDENTIFIED WITH mysql_native_password BY 'p@ssw0rd';
+ALTER USER 'dvwa'@'localhost' IDENTIFIED WITH mysql_native_password BY 'p@ssw0rd';
+FLUSH PRIVILEGES;
+SELECT User,Host,plugin FROM mysql.user WHERE User='dvwa'\G
+"
+  221  cd ~/Diplomas
+  222  sudo docker-compose -f docker-compose-dvwa.yml restart db dvwa
+  223  history | tail -n 200 > ~/Diplomas/commands_recent.txt
