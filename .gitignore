@@ -30,3 +30,13 @@ env.yml
 
 # artifacts you don't want to push (if any)
 # artifacts/   # <-- we DO want artifacts in repo, so do NOT exclude
+# exclude local docker-compose (credentials, local infra)
+docker-compose-dvwa.yml
+docker-compose-poc.yml
+# test applications (do not commit)
+dvwa-src/
+juice-shop-src/
+# credential files
+*.env
+*.secrets.yml
+credentials*.yml
