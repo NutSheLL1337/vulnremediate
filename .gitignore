@@ -1,4 +1,8 @@
 # exclude test apps and builds
+docker-compose-dvwa.yml
+docker-compose-poc.yml
+*.pem
+*.env
 dvwa-src/
 docker-compose-dvwa.yml
 docker-compose-poc.yml
