@@ -1,17 +1,9 @@
-# exclude DVWA source + other large or private files
+# exclude test apps and builds
 dvwa-src/
 juice-shop-src/
-*.sql
-*.sqlite
-*.db
-*.pem
-*.key
-.env
-node_modules/
-*.log
+.vbox/
 *.tar.gz
-*.zip
-.vscode/
+*.iso
+node_modules/
 __pycache__/
 .DS_Store
-# artifacts we DO track: artifacts/, scripts/, templates/
