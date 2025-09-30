@@ -1,0 +1,51 @@
+name: Security Scan PoC
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Semgrep
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
+
+      - name: Run Semgrep (SAST) and save SARIF
+        run: |
+          semgrep --config ./rules/ --sarif --output semgrep.sarif || true
+          ls -la
+        continue-on-error: true
+
+      - name: Run Syft (SBOM) via Anchore Action
+        uses: anchore/syft-action@v0.2.0
+        with:
+          output: 'sbom.cdx.json'
+          output-format: 'cyclonedx-json'
+
+      - name: Run Trivy (image/repo scan) via action
+        uses: aquasecurity/trivy-action@v0.6.0
+        with:
+          format: sarif
+          output: trivy.sarif
+          scan-type: fs
+
+      - name: Upload artifacts (SARIF, SBOM)
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-artifacts
+          path: |
+            semgrep.sarif
+            trivy.sarif
+            sbom.cdx.json

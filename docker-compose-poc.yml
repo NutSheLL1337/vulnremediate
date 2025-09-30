@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    container_name: juice-shop
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - poc-net
+
+  # Optional: ModSecurity/nginx proxy (may require additional setup)
+  modsec-proxy:
+    image: owasp/modsecurity-crs:nginx
+    container_name: modsec-proxy
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      - MODSEC_RULE_ENGINE=On
+    depends_on:
+      - juice-shop
+    networks:
+      - poc-net
+
+networks:
+  poc-net:
+    driver: bridge
