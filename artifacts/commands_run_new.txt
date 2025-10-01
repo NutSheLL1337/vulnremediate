@@ -1,0 +1,53 @@
+  350  trivy image web-dvwa:latest
+  351  trivy image web-dvwa
+  352  sudo trivy image web-dvwa
+  353  sudo trivy image dvwa_app
+  354  sudo trivy image vulnerables/web-dvwa:latest
+  355  sudo trivy image --format json --output trivy-dvwa-results.json  vulnerables/web-dvwa:latest
+  356  nano trivy-dvwa-results.json 
+  357  ls
+  358  nano sbom_dvwa_cyclonedx.json 
+  359  nano sbom_dvwa_spdx.json 
+  360  cd scripts/
+  361  ls
+  362  nano normalize_sarif.py 
+  363  cd ~/Diplomas
+  364  
+  396  mkdir patches/
+  397  ls
+  398  cd patches/
+  399  touch fix-instructions-validate-filename.php
+  400  nano fix-instructions-validate-filename.php 
+  401  # переконайся, що файл існує
+  402  ls -l patches/fix-instructions-validate-filename.php
+  403  # перевірити, чи .gitignore не ігнорує цей файл
+  404  git check-ignore -v patches/fix-instructions-validate-filename.php || echo "not ignored"
+  405  ls
+  406  cd ..
+  408  ls -l patches/fix-instructions-validate-filename.php
+  409  # перевірити, чи .gitignore не ігнорує цей файл
+  410  git check-ignore -v patches/fix-instructions-validate-filename.php || echo "not ignored"
+  411  git add patches/fix-instructions-validate-filename.php
+  412  # перевірити, що файл додано до індексу
+  413  git status --short
+   415  git commit -m "fix: validate filename in instructions.php (prevent tainted file access)" || echo "Nothing to commit"
+    418  cp -v ~/Diplomas/artifacts/draft_pr_from_semgrep.md ./artifacts/ || true
+  419  git add artifacts/draft_pr_from_semgrep.md || true
+  420  git commit -m "chore: add draft PR body" || echo "Nothing to commit"
+  421  git push -u origin remediation/fix-tainted-filename
+  423  cp -v ~/Diplomas/dvwa-src/instructions.php ~/Diplomas/dvwa-src/instructions.php.bak
+  424  cp -v ~/Diplomas/patches/fix-instructions-validate-filename.php ~/Diplomas/dvwa-src/instructions.php
+  425  docker-compose -f ~/Diplomas/docker-compose-dvwa.yml up -d --build
+  426  sudo docker-compose -f ~/Diplomas/docker-compose-dvwa.yml up -d --build
+  427  438  semgrep --config=p/security-audit --config=p/owasp-top-ten --config=p/php --sarif --output=before_fix_semgrep.sarif ~/Diplomas/dvwa-src/
+  439  export LC_ALL=en_US.UTF-8
+  440  	 export LANG=en_US.UTF-8
+  441  	 export PYTHONIOENCODING=utf-8
+  442  semgrep --config=p/security-audit --config=p/owasp-top-ten --config=p/php --sarif --output=before_fix_semgrep.sarif ~/Diplomas/dvwa-src/
+  443  python3 ~/Diplomas/scripts/normalize_sarif.py   --input ~/Diplomas/before_fix_semgrep.sarif.sarif   --output ~/Diplomas/before_fix_semgrep.csv
+  444  python3 ~/Diplomas/scripts/normalize_sarif.py  --input ~/Diplomas/before_fix_semgrep.sarif.sarif  --output ~/Diplomas/before_fix_semgrep.csv
+  445  python3 ~/Diplomas/scripts/normalize_sarif.py  --input ~/Diplomas/before_fix_semgrep.sarif  --output ~/Diplomas/before_fix_semgrep.csv
+  446  libreoffice before_fix_semgrep.csv 
+  447  cd artifacts/
+  448  libreoffice semgrep_enriched.csv 
+  449  history | tail -n 100 > ~/Diplomas/artifacts/commands_run_new.txt
