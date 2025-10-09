@@ -1,0 +1,9 @@
+# Draft PR: Remediation proposal — php.lang.security.phpinfo-use.phpinfo-use
+**Компонент / файл:** APPLICATION_CODE   
+**Категорія знахідки:** semgrep  (N/A)  
+**Короткий опис:** The 'phpinfo' function may reveal sensitive information about your environment.
+
+The 'phpinfo' function may reveal sensitive information about your environment.
+
+```diff
+See comments; no automatic patch provided

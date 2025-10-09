@@ -1,0 +1,9 @@
+# Draft PR: Remediation proposal — UNKNOWN
+**Компонент / файл:** /home/vboxuser/Diplomas/dvwa-src/.github/workflows/codeql-analysis.yml   
+**Категорія знахідки:** Semgrep/Trivy  (N/A)  
+**Короткий опис:** 
+
+
+
+```diff
+See comments; no automatic patch provided

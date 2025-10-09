@@ -1,0 +1,1 @@
+id,tool,rule_id,vulnerability_id,package,installed_version,message,severity,file,start_line,cwe,raw,component_name,component_version,match_how
