@@ -1,4 +1,5 @@
-name: Security Scan PoC
+name: Security scan and Remediation PoC
+
 on:
   push:
     branches: [ main ]
@@ -6,46 +7,179 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  security-scan:
-    runs-on: ubuntu-22.04
+  setup:
+    name: Setup environment
+    runs-on: ubuntu-latest
+    outputs:
+      docker_sock: /var/run/docker.sock
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
-      - name: Install Semgrep
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install semgrep
+          pip install -r requirements.txt || true
+          pip install jinja2 pygithub semgrep
 
-      - name: Run Semgrep (SAST) and save SARIF
+  semgrep-scan:
+    name: Semgrep scan
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: "auto"
+      - name: Export semgrep SARIF
         run: |
-          semgrep --config ./rules/ --sarif --output semgrep.sarif || true
-          ls -la
-        continue-on-error: true
-
-      - name: Run Syft (SBOM) via Anchore Action
-        uses: anchore/syft-action@v0.2.0
-        with:
-          output: 'sbom.cdx.json'
-          output-format: 'cyclonedx-json'
-
-      - name: Run Trivy (image/repo scan) via action
-        uses: aquasecurity/trivy-action@v0.6.0
-        with:
-          format: sarif
-          output: trivy.sarif
-          scan-type: fs
-
-      - name: Upload artifacts (SARIF, SBOM)
+          semgrep --config=auto --config=p/security-audit --config=p/owasp-top-ten --config=p/php --sarif --output=artifacts/semgrep_results.sarif .
+      - name: Upload semgrep SARIF artifact
         uses: actions/upload-artifact@v4
         with:
-          name: security-artifacts
-          path: |
-            semgrep.sarif
-            trivy.sarif
-            sbom.cdx.json
+          name: semgrep-sarif
+          path: artifacts/semgrep_results.sarif
+      - name: Upload SARIF to GitHub (Code scanning)
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: artifacts/semgrep_results.sarif
+
+  trivy-sbom-scan:
+    name: Trivy + Syft SBOM scan
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Syft and Trivy
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+      - name: Generate SBOM (CycloneDX)
+        run: |
+          syft packages dir:. -o cyclonedx-json=artifacts/sbom_dvwa_cyclonedx.json
+      - name: Run Trivy repo scan (SARIF)
+        run: |
+          trivy repo --format sarif -o artifacts/trivy-dvwa-results.sarif .
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-and-sbom
+          path: artifacts/sbom_dvwa_cyclonedx.json,artifacts/trivy-dvwa-results.sarif
+
+  normalize-and-aggregate:
+    name: Normalize SARIF and aggregate results
+    runs-on: ubuntu-latest
+    needs: [semgrep-scan, trivy-sbom-scan]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: trivy-and-sbom
+          path: artifacts
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas
+      - name: Run normalizer
+        run: |
+          python scripts/normalize_sarif.py artifacts/semgrep_results.sarif artifacts/semgrep_enriched.csv || true
+          python scripts/normalize_sarif.py artifacts/trivy-dvwa-results.sarif artifacts/trivy_enriched.csv || true
+      - name: Join Trivy + SBOM (local script)
+        run: |
+          python scripts/join_trivy_sbom.py artifacts/trivy_enriched.csv artifacts/sbom_dvwa_cyclonedx.json artifacts/trivy_sbom_joined.csv || true
+      - name: Upload normalized CSVs
+        uses: actions/upload-artifact@v4
+        with:
+          name: normalized-csvs
+          path: artifacts/semgrep_enriched.csv,artifacts/trivy_sbom_joined.csv
+
+  generate-patch-check:
+    name: Decide and generate patch (dry-run)
+    runs-on: ubuntu-latest
+    needs: normalize-and-aggregate
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download normalized csvs
+        uses: actions/download-artifact@v4
+        with:
+          name: normalized-csvs
+          path: artifacts
+      - name: Evaluate scoring & create patch (dry)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/evaluate_and_prepare_patch.py --input artifacts/semgrep_enriched.csv --trivy artifacts/trivy_sbom_joined.csv --out artifacts/patch_candidates.json
+          # The script should produce artifacts/generated_patch.diff for high-priority candidates.
+      - name: Upload patch artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: patch-candidate
+          path: artifacts/generated_patch.diff
+
+  sandbox-validate:
+    name: Sandbox validation
+    runs-on: ubuntu-latest
+    needs: generate-patch-check
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download patch
+        uses: actions/download-artifact@v4
+        with:
+          name: patch-candidate
+          path: artifacts
+      - name: Start sandbox (docker compose)
+        run: |
+          docker compose -f docker-compose-dvwa.yml up -d --build
+          sleep 10
+      - name: Apply patch (dry-run)
+        run: |
+          # apply patch in a sandboxed copy; the repository may need to be copied into container or patched locally
+          git apply --index artifacts/generated_patch.diff || true
+      - name: Run DAST (sqlmap) for validation
+        run: |
+          sqlmap -u "http://localhost:80/vulnerabilities/sqli/?id=1&Submit=Submit" --batch --level=2 --risk=2 --threads=2 --output-dir=artifacts/sqlmap_validation || true
+      - name: Upload validation logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-logs
+          path: artifacts/sqlmap_validation
+
+  # Optional: create draft PR (manual enable)
+  create-draft-pr:
+    name: Create draft PR (manual; requires GH token with repo scope)
+    runs-on: ubuntu-latest
+    needs: sandbox-validate
+    if: ${{ always() }}   # change to conditional when enabling
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download patch
+        uses: actions/download-artifact@v4
+        with:
+          name: patch-candidate
+          path: artifacts
+      - name: Create branch and commit patch
+        env:
+          GH_TOKEN: ${{ secrets.GH_PERSONAL_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "actions@github.com"
+          git checkout -b auto/remediation-${{ github.run_id }}
+          git apply artifacts/generated_patch.diff
+          git add -A
+          git commit -m "Auto remediation candidate (PoC) - ${{ github.run_id }}" || true
+          git push --set-upstream origin HEAD
+      - name: Create draft PR via gh CLI
+        env:
+          GH_TOKEN: ${{ secrets.GH_PERSONAL_TOKEN }}
+        run: |
+          gh auth login --with-token <<< "${GH_TOKEN}"
+          gh pr create --title "PoC: auto remediation candidate" --body "Automated remediation candidate. See artifacts." --draft
