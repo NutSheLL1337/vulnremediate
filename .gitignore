@@ -68,3 +68,5 @@ juice-shop-src/
 *.secrets.yml
 credentials*.yml
 >>>>>>> demo/autofix-low-sql-demo
+dvwa-src/
+juice-shop-src/
