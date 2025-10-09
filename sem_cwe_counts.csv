@@ -1,0 +1,7 @@
+cwe,cwe
+CWE-918: Server-Side Request Forgery (SSRF);MEDIUM CONFIDENCE;OWASP-A10:2021 - Server-Side Request Forgery (SSRF);security,11
+CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection');MEDIUM CONFIDENCE;OWASP-A03:2021 - Injection;security,9
+CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection');MEDIUM CONFIDENCE;OWASP-A01:2017 - Injection;OWASP-A03:2021 - Injection;security,8
+CWE-94: Improper Control of Generation of Code ('Code Injection');MEDIUM CONFIDENCE;OWASP-A03:2021 - Injection;security,8
+CWE-200: Exposure of Sensitive Information to an Unauthorized Actor;MEDIUM CONFIDENCE;OWASP-A01:2021 - Broken Access Control;security,1
+CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting');MEDIUM CONFIDENCE;OWASP-A03:2021 - Injection;OWASP-A07:2017 - Cross-Site Scripting (XSS);security,1

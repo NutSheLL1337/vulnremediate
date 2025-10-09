@@ -1,0 +1,4 @@
+tool,findings,notes
+Semgrep,38,raw semgrep_enriched rows
+Trivy+SBOM,1576,joined trivy_sbom_joined rows
+Trivy SARIF (parsed),1576,parsed sarif results

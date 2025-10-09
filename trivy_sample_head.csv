@@ -1,0 +1,301 @@
+tool,rule_id,message,level,file,start_line,cwe,component_name,component_version,component_purl,match_how,cve_id_extracted
+Trivy,CVE-2019-10082,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-10082
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u8
+Link: [CVE-2019-10082](https://avd.aquasec.com/nvd/cve-2019-10082)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2019-10082
+Trivy,CVE-2021-26691,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-26691
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u10
+Link: [CVE-2021-26691](https://avd.aquasec.com/nvd/cve-2021-26691)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2021-26691
+Trivy,CVE-2021-39275,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-39275
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u11
+Link: [CVE-2021-39275](https://avd.aquasec.com/nvd/cve-2021-39275)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2021-39275
+Trivy,CVE-2021-40438,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-40438
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u11
+Link: [CVE-2021-40438](https://avd.aquasec.com/nvd/cve-2021-40438)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2021-40438
+Trivy,CVE-2021-44790,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-44790
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u12
+Link: [CVE-2021-44790](https://avd.aquasec.com/nvd/cve-2021-44790)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2021-44790
+Trivy,CVE-2022-22720,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2022-22720
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u13
+Link: [CVE-2022-22720](https://avd.aquasec.com/nvd/cve-2022-22720)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2022-22720
+Trivy,CVE-2022-22721,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2022-22721
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u13
+Link: [CVE-2022-22721](https://avd.aquasec.com/nvd/cve-2022-22721)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2022-22721
+Trivy,CVE-2022-23943,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2022-23943
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u13
+Link: [CVE-2022-23943](https://avd.aquasec.com/nvd/cve-2022-23943)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2022-23943
+Trivy,CVE-2018-1333,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2018-1333
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u6
+Link: [CVE-2018-1333](https://avd.aquasec.com/nvd/cve-2018-1333)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2018-1333
+Trivy,CVE-2018-17199,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2018-17199
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u7
+Link: [CVE-2018-17199](https://avd.aquasec.com/nvd/cve-2018-17199)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2018-17199
+Trivy,CVE-2019-0211,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-0211
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u7
+Link: [CVE-2019-0211](https://avd.aquasec.com/nvd/cve-2019-0211)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2019-0211
+Trivy,CVE-2019-0217,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-0217
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u7
+Link: [CVE-2019-0217](https://avd.aquasec.com/nvd/cve-2019-0217)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2019-0217
+Trivy,CVE-2019-10081,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-10081
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u8
+Link: [CVE-2019-10081](https://avd.aquasec.com/nvd/cve-2019-10081)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2019-10081
+Trivy,CVE-2019-9517,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-9517
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u8
+Link: [CVE-2019-9517](https://avd.aquasec.com/nvd/cve-2019-9517)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2019-9517
+Trivy,CVE-2020-11993,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2020-11993
+Severity: HIGH
+Fixed Version: 
+Link: [CVE-2020-11993](https://avd.aquasec.com/nvd/cve-2020-11993)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2020-11993
+Trivy,CVE-2020-35452,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2020-35452
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u10
+Link: [CVE-2020-35452](https://avd.aquasec.com/nvd/cve-2020-35452)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2020-35452
+Trivy,CVE-2020-9490,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2020-9490
+Severity: HIGH
+Fixed Version: 
+Link: [CVE-2020-9490](https://avd.aquasec.com/nvd/cve-2020-9490)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2020-9490
+Trivy,CVE-2021-26690,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-26690
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u10
+Link: [CVE-2021-26690](https://avd.aquasec.com/nvd/cve-2021-26690)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2021-26690
+Trivy,CVE-2021-31618,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-31618
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u10
+Link: [CVE-2021-31618](https://avd.aquasec.com/nvd/cve-2021-31618)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2021-31618
+Trivy,CVE-2021-33193,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-33193
+Severity: HIGH
+Fixed Version: 
+Link: [CVE-2021-33193](https://avd.aquasec.com/nvd/cve-2021-33193)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2021-33193
+Trivy,CVE-2021-34798,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-34798
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u11
+Link: [CVE-2021-34798](https://avd.aquasec.com/nvd/cve-2021-34798)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2021-34798
+Trivy,CVE-2021-44224,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-44224
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u12
+Link: [CVE-2021-44224](https://avd.aquasec.com/nvd/cve-2021-44224)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2021-44224
+Trivy,CVE-2022-22719,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2022-22719
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u13
+Link: [CVE-2022-22719](https://avd.aquasec.com/nvd/cve-2022-22719)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2022-22719
+Trivy,CVE-2018-11763,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2018-11763
+Severity: MEDIUM
+Fixed Version: 2.4.25-3+deb9u6
+Link: [CVE-2018-11763](https://avd.aquasec.com/nvd/cve-2018-11763)",warning,vulnerables/web-dvwa,1,vulnerability;security;MEDIUM,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2018-11763
+Trivy,CVE-2018-17189,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2018-17189
+Severity: MEDIUM
+Fixed Version: 2.4.25-3+deb9u7
+Link: [CVE-2018-17189](https://avd.aquasec.com/nvd/cve-2018-17189)",warning,vulnerables/web-dvwa,1,vulnerability;security;MEDIUM,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2018-17189
+Trivy,CVE-2019-0196,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-0196
+Severity: MEDIUM
+Fixed Version: 2.4.25-3+deb9u7
+Link: [CVE-2019-0196](https://avd.aquasec.com/nvd/cve-2019-0196)",warning,vulnerables/web-dvwa,1,vulnerability;security;MEDIUM,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2019-0196
+Trivy,CVE-2019-0220,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-0220
+Severity: MEDIUM
+Fixed Version: 2.4.25-3+deb9u7
+Link: [CVE-2019-0220](https://avd.aquasec.com/nvd/cve-2019-0220)",warning,vulnerables/web-dvwa,1,vulnerability;security;MEDIUM,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2019-0220
+Trivy,CVE-2019-10092,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-10092
+Severity: MEDIUM
+Fixed Version: 2.4.25-3+deb9u9
+Link: [CVE-2019-10092](https://avd.aquasec.com/nvd/cve-2019-10092)",warning,vulnerables/web-dvwa,1,vulnerability;security;MEDIUM,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2019-10092
+Trivy,CVE-2019-10098,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-10098
+Severity: MEDIUM
+Fixed Version: 2.4.25-3+deb9u8
+Link: [CVE-2019-10098](https://avd.aquasec.com/nvd/cve-2019-10098)",warning,vulnerables/web-dvwa,1,vulnerability;security;MEDIUM,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2019-10098
+Trivy,CVE-2019-17567,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-17567
+Severity: MEDIUM
+Fixed Version: 
+Link: [CVE-2019-17567](https://avd.aquasec.com/nvd/cve-2019-17567)",warning,vulnerables/web-dvwa,1,vulnerability;security;MEDIUM,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2019-17567
+Trivy,CVE-2020-1927,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2020-1927
+Severity: MEDIUM
+Fixed Version: 2.4.25-3+deb9u10
+Link: [CVE-2020-1927](https://avd.aquasec.com/nvd/cve-2020-1927)",warning,vulnerables/web-dvwa,1,vulnerability;security;MEDIUM,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2020-1927
+Trivy,CVE-2020-1934,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2020-1934
+Severity: MEDIUM
+Fixed Version: 2.4.25-3+deb9u10
+Link: [CVE-2020-1934](https://avd.aquasec.com/nvd/cve-2020-1934)",warning,vulnerables/web-dvwa,1,vulnerability;security;MEDIUM,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2020-1934
+Trivy,CVE-2021-30641,"Package: apache2
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-30641
+Severity: MEDIUM
+Fixed Version: 2.4.25-3+deb9u10
+Link: [CVE-2021-30641](https://avd.aquasec.com/nvd/cve-2021-30641)",warning,vulnerables/web-dvwa,1,vulnerability;security;MEDIUM,apache2,2.4.25-3+deb9u5,pkg:deb/debian/apache2@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9,package_regex,CVE-2021-30641
+Trivy,CVE-2019-10082,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-10082
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u8
+Link: [CVE-2019-10082](https://avd.aquasec.com/nvd/cve-2019-10082)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2019-10082
+Trivy,CVE-2021-26691,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-26691
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u10
+Link: [CVE-2021-26691](https://avd.aquasec.com/nvd/cve-2021-26691)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2021-26691
+Trivy,CVE-2021-39275,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-39275
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u11
+Link: [CVE-2021-39275](https://avd.aquasec.com/nvd/cve-2021-39275)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2021-39275
+Trivy,CVE-2021-40438,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-40438
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u11
+Link: [CVE-2021-40438](https://avd.aquasec.com/nvd/cve-2021-40438)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2021-40438
+Trivy,CVE-2021-44790,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2021-44790
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u12
+Link: [CVE-2021-44790](https://avd.aquasec.com/nvd/cve-2021-44790)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2021-44790
+Trivy,CVE-2022-22720,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2022-22720
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u13
+Link: [CVE-2022-22720](https://avd.aquasec.com/nvd/cve-2022-22720)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2022-22720
+Trivy,CVE-2022-22721,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2022-22721
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u13
+Link: [CVE-2022-22721](https://avd.aquasec.com/nvd/cve-2022-22721)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2022-22721
+Trivy,CVE-2022-23943,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2022-23943
+Severity: CRITICAL
+Fixed Version: 2.4.25-3+deb9u13
+Link: [CVE-2022-23943](https://avd.aquasec.com/nvd/cve-2022-23943)",error,vulnerables/web-dvwa,1,vulnerability;security;CRITICAL,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2022-23943
+Trivy,CVE-2018-1333,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2018-1333
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u6
+Link: [CVE-2018-1333](https://avd.aquasec.com/nvd/cve-2018-1333)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2018-1333
+Trivy,CVE-2018-17199,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2018-17199
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u7
+Link: [CVE-2018-17199](https://avd.aquasec.com/nvd/cve-2018-17199)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2018-17199
+Trivy,CVE-2019-0211,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-0211
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u7
+Link: [CVE-2019-0211](https://avd.aquasec.com/nvd/cve-2019-0211)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2019-0211
+Trivy,CVE-2019-0217,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-0217
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u7
+Link: [CVE-2019-0217](https://avd.aquasec.com/nvd/cve-2019-0217)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2019-0217
+Trivy,CVE-2019-10081,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-10081
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u8
+Link: [CVE-2019-10081](https://avd.aquasec.com/nvd/cve-2019-10081)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2019-10081
+Trivy,CVE-2019-9517,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2019-9517
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u8
+Link: [CVE-2019-9517](https://avd.aquasec.com/nvd/cve-2019-9517)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2019-9517
+Trivy,CVE-2020-11993,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2020-11993
+Severity: HIGH
+Fixed Version: 
+Link: [CVE-2020-11993](https://avd.aquasec.com/nvd/cve-2020-11993)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2020-11993
+Trivy,CVE-2020-35452,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2020-35452
+Severity: HIGH
+Fixed Version: 2.4.25-3+deb9u10
+Link: [CVE-2020-35452](https://avd.aquasec.com/nvd/cve-2020-35452)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2020-35452
+Trivy,CVE-2020-9490,"Package: apache2-bin
+Installed Version: 2.4.25-3+deb9u5
+Vulnerability CVE-2020-9490
+Severity: HIGH
+Fixed Version: 
+Link: [CVE-2020-9490](https://avd.aquasec.com/nvd/cve-2020-9490)",error,vulnerables/web-dvwa,1,vulnerability;security;HIGH,apache2-bin,2.4.25-3+deb9u5,pkg:deb/debian/apache2-bin@2.4.25-3%2Bdeb9u5?arch=amd64&distro=debian-9&upstream=apache2,package_regex,CVE-2020-9490

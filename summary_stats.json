@@ -1,0 +1,24 @@
+{
+  "sem_total_findings": 38,
+  "sem_levels": {
+    "warning": 38
+  },
+  "sem_top_cwe": {
+    "cwe": 11
+  },
+  "trivy_total_findings": 1576,
+  "trivy_severity": {
+    "error": 806,
+    "warning": 642,
+    "note": 128
+  },
+  "trivy_top_cve": {
+    "cve": "CVE-2019-18218",
+    "count": 14
+  },
+  "trivy_top_component": {
+    "component": "php7.0-cli",
+    "count": 53
+  },
+  "sarif_parsed_count": 1576
+}
