@@ -1,0 +1,10 @@
+<?php
+// --- Original vulnerable fragment (before) ---
+// user / pass come from request (simplified)
+$user = $_GET['username'] ?? '';
+$pass = $_GET['password'] ?? '';
+$pass = md5($pass);
+
+// Check the database
+$query  = "SELECT * FROM `users` WHERE user = '$user' AND password = '$pass';";
+$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . mysqli_error($GLOBALS["___mysqli_ston"]) . '</pre>' );

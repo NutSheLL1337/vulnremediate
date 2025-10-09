@@ -1,0 +1,67 @@
+rules:
+  - id: ts-eval-usage
+    languages: [javascript, typescript]
+    message: "Potential eval usage (RCE)."
+    severity: ERROR
+    patterns:
+      - pattern: eval($X)
+
+  - id: ts-new-function
+    languages: [javascript, typescript]
+    message: "Use of new Function(...) (RCE)."
+    severity: ERROR
+    patterns:
+      - pattern: new Function($ARGS)
+
+  - id: ts-innerhtml
+    languages: [javascript, typescript]
+    message: "Assigning to innerHTML or using document.write — possible XSS."
+    severity: HIGH
+    patterns:
+      - pattern: $E.innerHTML = $X
+      - pattern: document.write($X)
+
+  - id: ts-res-send-req
+    languages: [javascript, typescript]
+    message: "Response sends user-controlled request data directly (possible XSS)."
+    severity: HIGH
+    patterns:
+      - pattern: res.send(req.query.$ANY)
+      - pattern: res.send(req.body.$ANY)
+      - pattern: res.send(req.params.$ANY)
+
+  - id: ts-sql-sequelize-concat
+    languages: [javascript, typescript]
+    message: "Potential SQL query via string concatenation in sequelize.query."
+    severity: HIGH
+    patterns:
+      - pattern: sequelize.query($A + $B)
+      - pattern: sequelize.query($A)
+
+  - id: ts-sql-raw-query
+    languages: [javascript, typescript]
+    message: "Raw DB query call with possible concatenation (check param binding)."
+    severity: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: db.query($Q)
+          - pattern: connection.query($Q)
+          - pattern: $DB.query($Q)
+
+  - id: ts-child-process-exec
+    languages: [javascript, typescript]
+    message: "Use of child_process.exec/execSync - check input sanitization."
+    severity: HIGH
+    patterns:
+      - pattern: require('child_process').exec($X)
+      - pattern: require('child_process').execSync($X)
+      - pattern: child_process.exec($X)
+      - pattern: child_process.execSync($X)
+
+  - id: ts-jwt-sign
+    languages: [javascript, typescript]
+    message: "jwt.sign called — check secret management (hardcoded secret risk)."
+    severity: MEDIUM
+    patterns:
+      - pattern: jwt.sign($P, $S)
+      - pattern: jsonwebtoken.sign($P, $S)

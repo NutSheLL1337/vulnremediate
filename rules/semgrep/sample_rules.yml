@@ -1,0 +1,28 @@
+rules:
+  - id: ts-eval-usage
+    languages: [typescript, javascript]
+    message: "Potential eval usage (RCE risk)."
+    severity: ERROR
+    pattern: eval($X)
+
+  - id: ts-innerhtml-assignment
+    languages: [typescript, javascript]
+    message: "innerHTML assignment — verify sanitization (XSS risk)."
+    severity: HIGH
+    patterns:
+      - pattern: $E.innerHTML = $X
+      - pattern: document.write($X)
+
+  - id: ts-sql-string-concat
+    languages: [typescript, javascript]
+    message: "Possible SQL query built via string concatenation — use parameterized queries."
+    severity: HIGH
+    pattern: $A + $B
+
+  - id: ts-child-process-exec
+    languages: [typescript, javascript]
+    message: "Use of child_process.exec/execSync - check input sanitization."
+    severity: HIGH
+    patterns:
+      - pattern: require('child_process').exec($X)
+      - pattern: require('child_process').execSync($X)

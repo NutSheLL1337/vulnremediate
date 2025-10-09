@@ -1,0 +1,12 @@
+id: js-eval-detect
+meta:
+  name: JavaScript eval usage
+  description: Detect use of eval() in JS
+  severity: HIGH
+  author: you
+  reference: https://owasp.org/www-community/vulnerabilities/Unvalidated_Redirects_and_Forwards
+languages:
+  - javascript
+patterns:
+  - pattern: eval($X)
+message: "Виявлено використання eval() — небезпечно, уникайте виконання рядків коду."<<TZTZTZ

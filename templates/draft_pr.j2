@@ -1,0 +1,9 @@
+# Draft PR: Remediation proposal — {{ vuln_id or "UNKNOWN" }}
+**Компонент / файл:** {{ component_name }} {% if component_version %}v{{ component_version }}{% endif %}  
+**Категорія знахідки:** {{ source_type }}  ({{ severity | default("N/A") }})  
+**Короткий опис:** {{ short_description }}
+
+{{ evidence }}
+
+```diff
+{{ patch_snippet }}

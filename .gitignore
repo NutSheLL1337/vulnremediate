@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CakePHP 3
 
 /vendor/*
@@ -23,3 +24,47 @@
 /app/Config/core.php
 /app/Config/database.php
 /vendors/*
+=======
+# exclude vulnerable test apps and local VMs
+dvwa-src/
+dvwa/
+juice-shop-src/
+juice-shop/
+.vbox/
+.vagrant/
+# node deps / python cache
+node_modules/
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+.DS_Store
+
+# secrets / credentials yaml (typical names to exclude)
+credentials.yml
+*.credentials.yml
+*.secrets.yml
+secret.yml
+env.yml
+*.env
+*.pem
+*.key
+
+# docker images / archives
+*.tar.gz
+*.tar
+*.iso
+
+# artifacts you don't want to push (if any)
+# artifacts/   # <-- we DO want artifacts in repo, so do NOT exclude
+# exclude local docker-compose (credentials, local infra)
+docker-compose-dvwa.yml
+docker-compose-poc.yml
+# test applications (do not commit)
+dvwa-src/
+juice-shop-src/
+# credential files
+*.env
+*.secrets.yml
+credentials*.yml
+>>>>>>> demo/autofix-low-sql-demo
