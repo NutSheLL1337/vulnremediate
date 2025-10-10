@@ -1,0 +1,25 @@
+[INF] Current nuclei version: v3.2.0
+[INF] Using Nuclei Engine 3.2.0 (stable)
+[INF] Templates loaded: 5851 (severity: info, low, medium, high, critical)
+
+[2025-10-10 14:25:03] [medium] [http] [http-detect-cors-wildcard] http://127.0.0.1:8080 
+[CORS] Wildcard Access-Control-Allow-Origin Detected
+ | URL: http://127.0.0.1:8080
+ | method: GET
+ | severity: medium
+ | matched-at: http://127.0.0.1:8080
+ | template-id: http-detect-cors-wildcard
+
+[2025-10-10 14:25:04] [low] [http] [http-missing-security-headers] http://127.0.0.1:8080 
+[Missing Headers]
+ | Missing: X-Frame-Options, X-Content-Type-Options
+ | severity: low
+ | template-id: http-missing-security-headers
+
+[2025-10-10 14:25:05] [info] [http] [tech-detect] http://127.0.0.1:8080 
+[Tech Detect]
+ | Detected: PHP, Apache
+ | severity: info
+ | template-id: tech-detect
+
+[INF] Scan completed in 3 seconds
