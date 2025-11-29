@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Vulnerable Flask App
+  vulnerable-flask:
+    build: ./targets/flask-app
+    container_name: vulnremediate-flask
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./targets/flask-app:/app
+    environment:
+      - FLASK_ENV=development
+    restart: unless-stopped
+    networks:
+      - vulnremediate-network
+
+  # DVWA (Damn Vulnerable Web Application)
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: vulnremediate-dvwa
+    ports:
+      - "8080:80"
+    environment:
+      - MYSQL_PASS=password
+    restart: unless-stopped
+    networks:
+      - vulnremediate-network
+
+networks:
+  vulnremediate-network:
+    driver: bridge

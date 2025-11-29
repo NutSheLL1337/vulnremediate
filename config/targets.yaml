@@ -1,0 +1,69 @@
+# Targets configuration for VulnRemediate PoC
+
+targets:
+  - name: "Vulnerable Flask App"
+    type: "custom"
+    path: "./targets/flask-app"
+    url: "http://localhost:5001"
+    description: "Custom Flask application with intentional vulnerabilities (SQLi, XSS, Path Traversal, etc.)"
+    docker_service: "vulnerable-flask"
+    vulnerabilities:
+      - CWE-89: "SQL Injection"
+      - CWE-79: "Cross-Site Scripting"
+      - CWE-22: "Path Traversal"
+      - CWE-798: "Hardcoded Credentials"
+      - CWE-327: "Weak Cryptography"
+      - CWE-78: "Command Injection"
+      - CWE-601: "Open Redirect"
+    enabled: true
+
+  - name: "DVWA"
+    type: "external"
+    path: "./fixes/dvwa"
+    url: "http://localhost:8080"
+    description: "Damn Vulnerable Web Application - standard security testing platform"
+    docker_service: "dvwa"
+    vulnerabilities:
+      - "Brute Force"
+      - "Command Injection"
+      - "CSRF"
+      - "File Inclusion"
+      - "SQL Injection"
+      - "XSS (Reflected)"
+      - "XSS (Stored)"
+    enabled: true
+
+scan_configs:
+  sast:
+    tool: "semgrep"
+    rulesets:
+      - "auto"
+      - "security"
+      - "owasp-top-10"
+      - "cwe-top-25"
+    default_ruleset: "auto"
+    timeout: 300
+    
+  dast:
+    tool: "nuclei"
+    templates:
+      - "cves"
+      - "vulnerabilities"
+      - "exposures"
+      - "all"
+    default_template: "vulnerabilities"
+    timeout: 600
+    rate_limit: 150
+    
+  sbom:
+    tool: "trivy"
+    formats:
+      - "cyclonedx"
+      - "spdx"
+    severities:
+      - "LOW"
+      - "MEDIUM"
+      - "HIGH"
+      - "CRITICAL"
+    default_severity: "MEDIUM"
+    timeout: 300
