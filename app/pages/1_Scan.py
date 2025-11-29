@@ -21,27 +21,48 @@ st.set_page_config(page_title="Scan Controller", page_icon="🔍", layout="wide"
 def check_semgrep_installed():
     """Check if Semgrep is installed"""
     try:
-        result = subprocess.run(["semgrep", "--version"], capture_output=True, text=True, timeout=5)
+        result = subprocess.run(
+            ["semgrep", "--version"], 
+            capture_output=True, 
+            text=True, 
+            timeout=10,
+            shell=True  # Windows fix
+        )
         return result.returncode == 0
-    except:
+    except Exception as e:
+        st.warning(f"Semgrep check error: {e}")
         return False
 
 
 def check_nuclei_installed():
     """Check if Nuclei is installed"""
     try:
-        result = subprocess.run(["nuclei", "-version"], capture_output=True, text=True, timeout=5)
+        result = subprocess.run(
+            ["nuclei", "-version"], 
+            capture_output=True, 
+            text=True, 
+            timeout=10,
+            shell=True  # Windows fix
+        )
         return result.returncode == 0
-    except:
+    except Exception as e:
+        st.warning(f"Nuclei check error: {e}")
         return False
 
 
 def check_trivy_installed():
     """Check if Trivy is installed"""
     try:
-        result = subprocess.run(["trivy", "--version"], capture_output=True, text=True, timeout=5)
+        result = subprocess.run(
+            ["trivy", "--version"], 
+            capture_output=True, 
+            text=True, 
+            timeout=10,
+            shell=True  # Windows fix
+        )
         return result.returncode == 0
-    except:
+    except Exception as e:
+        st.warning(f"Trivy check error: {e}")
         return False
 
 st.markdown("# 🔍 Scan Controller")
@@ -110,6 +131,8 @@ with st.expander("⚙️ Додаткові налаштування"):
     with col1:
         max_findings = st.number_input("Макс. кількість findings:", min_value=10, max_value=1000, value=100)
         timeout = st.number_input("Timeout (сек):", min_value=60, max_value=3600, value=300)
+        skip_tool_check = st.checkbox("⚠️ Пропустити перевірку інструментів (для тестування)", value=False, 
+                                      help="Використовуйте якщо інструменти встановлені але не виявляються")
     with col2:
         output_format = st.selectbox("Формат виводу:", ["SARIF", "JSON", "Both"], index=2)
         save_raw = st.checkbox("Зберегти raw output", value=True)
@@ -123,28 +146,29 @@ with col1:
     if st.button("🚀 Запустити всі обрані сканування", type="primary", disabled=st.session_state.scan_running):
         st.session_state.scan_running = True
         
-        # Check which tools are installed
-        tools_status = {
-            "Semgrep": check_semgrep_installed() if run_sast else True,
-            "Nuclei": check_nuclei_installed() if run_dast else True,
-            "Trivy": check_trivy_installed() if run_sbom else True
-        }
-        
-        # Show tool status
-        missing_tools = [tool for tool, installed in tools_status.items() if not installed]
-        
-        if missing_tools:
-            st.error(f"❌ Не встановлено: {', '.join(missing_tools)}")
+        # Check which tools are installed (if not skipped)
+        if not skip_tool_check:
+            tools_status = {
+                "Semgrep": check_semgrep_installed() if run_sast else True,
+                "Nuclei": check_nuclei_installed() if run_dast else True,
+                "Trivy": check_trivy_installed() if run_sbom else True
+            }
             
-            if not tools_status.get("Semgrep", True):
-                st.warning("**Semgrep** не встановлено")
-                st.code("pip install semgrep", language="powershell")
+            # Show tool status
+            missing_tools = [tool for tool, installed in tools_status.items() if not installed]
             
-            if not tools_status.get("Nuclei", True):
-                st.warning("**Nuclei** не встановлено")
-                st.markdown("📥 Завантажити: [GitHub Releases](https://github.com/projectdiscovery/nuclei/releases)")
-                with st.expander("Швидке встановлення Nuclei"):
-                    st.code("""# Створити папку
+            if missing_tools:
+                st.error(f"❌ Не встановлено: {', '.join(missing_tools)}")
+                
+                if not tools_status.get("Semgrep", True):
+                    st.warning("**Semgrep** не встановлено")
+                    st.code("pip install semgrep", language="powershell")
+                
+                if not tools_status.get("Nuclei", True):
+                    st.warning("**Nuclei** не встановлено")
+                    st.markdown("📥 Завантажити: [GitHub Releases](https://github.com/projectdiscovery/nuclei/releases)")
+                    with st.expander("Швидке встановлення Nuclei"):
+                        st.code("""# Створити папку
 mkdir C:\\tools\\nuclei
 cd C:\\tools\\nuclei
 
@@ -156,15 +180,18 @@ cd C:\\tools\\nuclei
 
 # Перевірити
 nuclei -version""", language="powershell")
-            
-            if not tools_status.get("Trivy", True):
-                st.warning("**Trivy** не встановлено")
-                st.code("choco install trivy", language="powershell")
-                st.markdown("📥 Або завантажити: [GitHub Releases](https://github.com/aquasecurity/trivy/releases)")
-            
-            st.info("💡 Після встановлення перезапустіть термінал та Streamlit")
-            st.session_state.scan_running = False
-            st.stop()
+                
+                if not tools_status.get("Trivy", True):
+                    st.warning("**Trivy** не встановлено")
+                    st.code("choco install trivy", language="powershell")
+                    st.markdown("📥 Або завантажити: [GitHub Releases](https://github.com/aquasecurity/trivy/releases)")
+                
+                st.info("💡 Після встановлення перезапустіть термінал та Streamlit")
+                st.info("💡 Або увімкніть опцію 'Пропустити перевірку інструментів' в додаткових налаштуваннях")
+                st.session_state.scan_running = False
+                st.stop()
+        else:
+            st.warning("⚠️ Перевірку інструментів пропущено. Переконайтесь що вони встановлені!")
         
         # Create scan directory
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
