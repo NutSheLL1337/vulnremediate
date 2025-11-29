@@ -37,6 +37,22 @@ st.markdown("""
         border-radius: 8px;
         border-left: 4px solid #667eea;
         margin-bottom: 1rem;
+        color: #2c3e50;
+    }
+    .feature-card h3 {
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+    .feature-card p {
+        color: #34495e;
+        margin-bottom: 0.5rem;
+    }
+    .feature-card ul {
+        color: #34495e;
+        margin-left: 1.5rem;
+    }
+    .feature-card li {
+        color: #34495e;
     }
     .metric-card {
         background: white;
@@ -44,6 +60,17 @@ st.markdown("""
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         text-align: center;
+    }
+    .metric-card h2 {
+        color: #667eea;
+        margin: 0.5rem 0;
+    }
+    .metric-card h3 {
+        margin: 0;
+    }
+    .metric-card p {
+        color: #7f8c8d;
+        margin: 0;
     }
     .stButton>button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

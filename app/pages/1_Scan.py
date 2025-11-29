@@ -16,6 +16,34 @@ sys.path.insert(0, str(ROOT))
 
 st.set_page_config(page_title="Scan Controller", page_icon="🔍", layout="wide")
 
+
+# Helper functions to check if tools are installed
+def check_semgrep_installed():
+    """Check if Semgrep is installed"""
+    try:
+        result = subprocess.run(["semgrep", "--version"], capture_output=True, text=True, timeout=5)
+        return result.returncode == 0
+    except:
+        return False
+
+
+def check_nuclei_installed():
+    """Check if Nuclei is installed"""
+    try:
+        result = subprocess.run(["nuclei", "-version"], capture_output=True, text=True, timeout=5)
+        return result.returncode == 0
+    except:
+        return False
+
+
+def check_trivy_installed():
+    """Check if Trivy is installed"""
+    try:
+        result = subprocess.run(["trivy", "--version"], capture_output=True, text=True, timeout=5)
+        return result.returncode == 0
+    except:
+        return False
+
 st.markdown("# 🔍 Scan Controller")
 st.markdown("### Запуск сканувань на вразливості")
 
@@ -94,6 +122,49 @@ col1, col2, col3 = st.columns([2, 1, 1])
 with col1:
     if st.button("🚀 Запустити всі обрані сканування", type="primary", disabled=st.session_state.scan_running):
         st.session_state.scan_running = True
+        
+        # Check which tools are installed
+        tools_status = {
+            "Semgrep": check_semgrep_installed() if run_sast else True,
+            "Nuclei": check_nuclei_installed() if run_dast else True,
+            "Trivy": check_trivy_installed() if run_sbom else True
+        }
+        
+        # Show tool status
+        missing_tools = [tool for tool, installed in tools_status.items() if not installed]
+        
+        if missing_tools:
+            st.error(f"❌ Не встановлено: {', '.join(missing_tools)}")
+            
+            if not tools_status.get("Semgrep", True):
+                st.warning("**Semgrep** не встановлено")
+                st.code("pip install semgrep", language="powershell")
+            
+            if not tools_status.get("Nuclei", True):
+                st.warning("**Nuclei** не встановлено")
+                st.markdown("📥 Завантажити: [GitHub Releases](https://github.com/projectdiscovery/nuclei/releases)")
+                with st.expander("Швидке встановлення Nuclei"):
+                    st.code("""# Створити папку
+mkdir C:\\tools\\nuclei
+cd C:\\tools\\nuclei
+
+# Завантажити останню версію з GitHub Releases
+# Наприклад: nuclei_3.1.0_windows_amd64.zip
+
+# Розпакувати nuclei.exe
+# Додати C:\\tools\\nuclei до PATH
+
+# Перевірити
+nuclei -version""", language="powershell")
+            
+            if not tools_status.get("Trivy", True):
+                st.warning("**Trivy** не встановлено")
+                st.code("choco install trivy", language="powershell")
+                st.markdown("📥 Або завантажити: [GitHub Releases](https://github.com/aquasecurity/trivy/releases)")
+            
+            st.info("💡 Після встановлення перезапустіть термінал та Streamlit")
+            st.session_state.scan_running = False
+            st.stop()
         
         # Create scan directory
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
