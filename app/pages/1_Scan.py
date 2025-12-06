@@ -1,72 +1,28 @@
 """
-Scan Controller Page - запуск SAST/DAST/SBOM сканувань
+Scan Controller Page - запуск SAST/DAST/SBOM сканувань через Docker
 """
 
 import streamlit as st
 import sys
 from pathlib import Path
 import json
-import subprocess
 from datetime import datetime
-import time
 
 # Setup paths
 ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(ROOT))
 
+from app.core.scanners.docker_scanners import (
+    check_docker_available,
+    run_semgrep_docker,
+    run_trivy_docker,
+    run_nuclei_docker
+)
+
 st.set_page_config(page_title="Scan Controller", page_icon="🔍", layout="wide")
 
-
-# Helper functions to check if tools are installed
-def check_semgrep_installed():
-    """Check if Semgrep is installed"""
-    try:
-        result = subprocess.run(
-            ["semgrep", "--version"], 
-            capture_output=True, 
-            text=True, 
-            timeout=10,
-            shell=True  # Windows fix
-        )
-        return result.returncode == 0
-    except Exception as e:
-        st.warning(f"Semgrep check error: {e}")
-        return False
-
-
-def check_nuclei_installed():
-    """Check if Nuclei is installed"""
-    try:
-        result = subprocess.run(
-            ["nuclei", "-version"], 
-            capture_output=True, 
-            text=True, 
-            timeout=10,
-            shell=True  # Windows fix
-        )
-        return result.returncode == 0
-    except Exception as e:
-        st.warning(f"Nuclei check error: {e}")
-        return False
-
-
-def check_trivy_installed():
-    """Check if Trivy is installed"""
-    try:
-        result = subprocess.run(
-            ["trivy", "--version"], 
-            capture_output=True, 
-            text=True, 
-            timeout=10,
-            shell=True  # Windows fix
-        )
-        return result.returncode == 0
-    except Exception as e:
-        st.warning(f"Trivy check error: {e}")
-        return False
-
-st.markdown("# 🔍 Scan Controller")
-st.markdown("### Запуск сканувань на вразливості")
+st.markdown("# 🔍 Scan Controller (Docker Mode)")
+st.markdown("### Запуск сканувань на вразливості через Docker контейнери")
 
 # Initialize session state
 if 'scan_results' not in st.session_state:
@@ -74,21 +30,45 @@ if 'scan_results' not in st.session_state:
 if 'scan_running' not in st.session_state:
     st.session_state.scan_running = False
 
+# Check Docker availability
+docker_available = check_docker_available()
+
+if not docker_available:
+    st.error("❌ **Docker не доступний!**")
+    st.markdown("""
+    Для роботи цього застосунку потрібен Docker.
+    
+    **Встановлення Docker:**
+    1. Завантажте [Docker Desktop для Windows](https://www.docker.com/products/docker-desktop/)
+    2. Встановіть та запустіть Docker Desktop
+    3. Перезапустіть Streamlit
+    
+    **Або перевірте чи запущений Docker:**
+    ```powershell
+    docker --version
+    ```
+    """)
+    st.stop()
+else:
+    st.success("✅ Docker доступний")
+
 # Target selection
 st.markdown("## 1️⃣ Оберіть ціль сканування")
 
 targets = {
     "Vulnerable Flask App": {
         "path": str(ROOT / "targets" / "flask-app"),
-        "url": "http://localhost:5001",
+        "url": "http://localhost:5001",  # Nuclei з --network host використовує localhost
+        "url_display": "http://localhost:5001",
         "type": "custom",
         "description": "Кастомний Flask додаток з вразливостями SQLi, XSS, Path Traversal"
     },
     "DVWA": {
-        "path": str(ROOT / "fixes" / "dvwa"),
-        "url": "http://localhost:8080",
+        "path": str(ROOT / "targets" / "dvwa"),
+        "url": "http://localhost:8080",  # Nuclei з --network host використовує localhost
+        "url_display": "http://localhost:8080",
         "type": "external",
-        "description": "Damn Vulnerable Web Application (DVWA)"
+        "description": "Damn Vulnerable Web Application - повний PHP додаток з 10+ типами вразливостей"
     }
 }
 
@@ -103,7 +83,7 @@ with col1:
 
 with col2:
     target_info = targets[selected_target]
-    st.info(f"📁 **Шлях:** `{target_info['path']}`\n\n🌐 **URL:** `{target_info['url']}`\n\n📝 {target_info['description']}")
+    st.info(f"📁 **Шлях:** `{target_info['path']}`\n\n🌐 **URL:** `{target_info.get('url_display', target_info['url'])}`\n\n📝 {target_info['description']}")
 
 # Scan configuration
 st.markdown("## 2️⃣ Налаштування сканування")
@@ -130,9 +110,8 @@ with st.expander("⚙️ Додаткові налаштування"):
     col1, col2 = st.columns(2)
     with col1:
         max_findings = st.number_input("Макс. кількість findings:", min_value=10, max_value=1000, value=100)
-        timeout = st.number_input("Timeout (сек):", min_value=60, max_value=3600, value=300)
-        skip_tool_check = st.checkbox("⚠️ Пропустити перевірку інструментів (для тестування)", value=False, 
-                                      help="Використовуйте якщо інструменти встановлені але не виявляються")
+        auto_pull_images = st.checkbox("🐋 Автоматично завантажувати Docker образи", value=True,
+                                       help="Якщо образ не знайдено локально, Docker автоматично завантажить його")
     with col2:
         output_format = st.selectbox("Формат виводу:", ["SARIF", "JSON", "Both"], index=2)
         save_raw = st.checkbox("Зберегти raw output", value=True)
@@ -145,53 +124,6 @@ col1, col2, col3 = st.columns([2, 1, 1])
 with col1:
     if st.button("🚀 Запустити всі обрані сканування", type="primary", disabled=st.session_state.scan_running):
         st.session_state.scan_running = True
-        
-        # Check which tools are installed (if not skipped)
-        if not skip_tool_check:
-            tools_status = {
-                "Semgrep": check_semgrep_installed() if run_sast else True,
-                "Nuclei": check_nuclei_installed() if run_dast else True,
-                "Trivy": check_trivy_installed() if run_sbom else True
-            }
-            
-            # Show tool status
-            missing_tools = [tool for tool, installed in tools_status.items() if not installed]
-            
-            if missing_tools:
-                st.error(f"❌ Не встановлено: {', '.join(missing_tools)}")
-                
-                if not tools_status.get("Semgrep", True):
-                    st.warning("**Semgrep** не встановлено")
-                    st.code("pip install semgrep", language="powershell")
-                
-                if not tools_status.get("Nuclei", True):
-                    st.warning("**Nuclei** не встановлено")
-                    st.markdown("📥 Завантажити: [GitHub Releases](https://github.com/projectdiscovery/nuclei/releases)")
-                    with st.expander("Швидке встановлення Nuclei"):
-                        st.code("""# Створити папку
-mkdir C:\\tools\\nuclei
-cd C:\\tools\\nuclei
-
-# Завантажити останню версію з GitHub Releases
-# Наприклад: nuclei_3.1.0_windows_amd64.zip
-
-# Розпакувати nuclei.exe
-# Додати C:\\tools\\nuclei до PATH
-
-# Перевірити
-nuclei -version""", language="powershell")
-                
-                if not tools_status.get("Trivy", True):
-                    st.warning("**Trivy** не встановлено")
-                    st.code("choco install trivy", language="powershell")
-                    st.markdown("📥 Або завантажити: [GitHub Releases](https://github.com/aquasecurity/trivy/releases)")
-                
-                st.info("💡 Після встановлення перезапустіть термінал та Streamlit")
-                st.info("💡 Або увімкніть опцію 'Пропустити перевірку інструментів' в додаткових налаштуваннях")
-                st.session_state.scan_running = False
-                st.stop()
-        else:
-            st.warning("⚠️ Перевірку інструментів пропущено. Переконайтесь що вони встановлені!")
         
         # Create scan directory
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -214,12 +146,13 @@ nuclei -version""", language="powershell")
                 "dast_templates": dast_templates if run_dast else None,
                 "sbom_severity": sbom_severity if run_sbom else None,
                 "max_findings": max_findings,
-                "timeout": timeout
+                "output_format": output_format,
+                "docker_mode": True
             }
         }
         
-        with open(scan_dir / "config.json", "w") as f:
-            json.dump(config, f, indent=2)
+        with open(scan_dir / "config.json", "w", encoding='utf-8') as f:
+            json.dump(config, f, indent=2, ensure_ascii=False)
         
         st.success(f"✅ Створено директорію сканування: `{scan_dir.name}`")
         
@@ -230,149 +163,138 @@ nuclei -version""", language="powershell")
         total_scans = sum([run_sast, run_dast, run_sbom])
         current_scan = 0
         
-        # SAST - Semgrep
+        results_summary = {
+            "scans_completed": [],
+            "scans_failed": [],
+            "total_findings": 0
+        }
+        
+        # SAST - Semgrep (Docker)
         if run_sast:
-            status_text.text("🔍 Запуск Semgrep (SAST)...")
+            status_text.text("🔍 Запуск Semgrep через Docker...")
             progress_bar.progress(current_scan / total_scans)
             
-            try:
-                # Check if semgrep is installed
-                result = subprocess.run(["semgrep", "--version"], capture_output=True, text=True)
+            with st.spinner("Сканування Semgrep (це може зайняти кілька хвилин при першому запуску)..."):
+                result = run_semgrep_docker(
+                    target_path=Path(target_info['path']),
+                    output_dir=scan_dir,
+                    ruleset=sast_ruleset
+                )
                 
-                cmd = [
-                    "semgrep",
-                    "--config", f"{sast_ruleset}" if sast_ruleset == "auto" else f"p/{sast_ruleset}",
-                    "--json",
-                    "--output", str(scan_dir / "semgrep.json"),
-                    target_info['path']
-                ]
-                
-                with st.spinner("Сканування Semgrep..."):
-                    result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
-                    
-                if result.returncode == 0 or result.returncode == 1:  # 1 = findings found
-                    st.success("✅ Semgrep завершено")
-                    # Also save SARIF
-                    cmd_sarif = cmd.copy()
-                    cmd_sarif[-2] = str(scan_dir / "semgrep.sarif")
-                    cmd_sarif.insert(-2, "--sarif")
-                    subprocess.run(cmd_sarif, capture_output=True, timeout=timeout)
+                if result.get("success"):
+                    findings = result.get("findings_count", 0)
+                    results_summary["total_findings"] += findings
+                    results_summary["scans_completed"].append(f"Semgrep ({findings} findings)")
+                    st.success(f"✅ Semgrep завершено: знайдено {findings} findings")
                 else:
-                    st.warning(f"⚠️ Semgrep завершився з помилкою: {result.stderr}")
-                    
-            except FileNotFoundError:
-                st.error("❌ Semgrep не встановлено. Встановіть: `pip install semgrep`")
-            except subprocess.TimeoutExpired:
-                st.error("❌ Semgrep перевищив timeout")
-            except Exception as e:
-                st.error(f"❌ Помилка Semgrep: {e}")
+                    results_summary["scans_failed"].append(f"Semgrep: {result.get('error', 'Unknown error')}")
+                    st.error(f"❌ Помилка Semgrep: {result.get('error')}")
+                    with st.expander("Деталі помилки"):
+                        st.code(result.get("stderr", "No details"))
             
             current_scan += 1
             progress_bar.progress(current_scan / total_scans)
         
-        # DAST - Nuclei
+        # DAST - Nuclei (Docker)
         if run_dast:
-            status_text.text("🌐 Запуск Nuclei (DAST)...")
+            status_text.text("🌐 Запуск Nuclei через Docker...")
             progress_bar.progress(current_scan / total_scans)
             
-            try:
-                # Check if target is running
-                import socket
-                url_parts = target_info['url'].replace('http://', '').split(':')
-                host = url_parts[0]
-                port = int(url_parts[1]) if len(url_parts) > 1 else 80
-                
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(2)
-                result = sock.connect_ex((host, port))
-                sock.close()
-                
-                if result != 0:
-                    st.warning(f"⚠️ Ціль не доступна на {target_info['url']}. Переконайтесь що додаток запущено.")
-                else:
-                    cmd = [
-                        "nuclei",
-                        "-u", target_info['url'],
-                        "-t", dast_templates if dast_templates != "all" else "",
-                        "-json",
-                        "-o", str(scan_dir / "nuclei.json")
-                    ]
+            # Check if target is accessible
+            import socket
+            url_parts = target_info['url'].replace('http://', '').split(':')
+            host = url_parts[0]
+            port = int(url_parts[1]) if len(url_parts) > 1 else 80
+            
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(2)
+            target_available = sock.connect_ex((host, port)) == 0
+            sock.close()
+            
+            if not target_available:
+                st.warning(f"⚠️ Ціль не доступна на порту {port}. Переконайтесь що додаток запущено (docker-compose up).")
+                results_summary["scans_failed"].append("Nuclei: Target not available")
+            else:
+                with st.spinner("Сканування Nuclei (DAST може тривати довше)..."):
+                    result = run_nuclei_docker(
+                        target_url=target_info['url'],
+                        output_dir=scan_dir,
+                        templates=dast_templates
+                    )
                     
-                    if dast_templates == "all":
-                        cmd.remove("-t")
-                        cmd.remove("")
-                    
-                    with st.spinner("Сканування Nuclei..."):
-                        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
-                        
-                    if result.returncode == 0:
-                        st.success("✅ Nuclei завершено")
+                    if result.get("success"):
+                        findings = result.get("findings_count", 0)
+                        results_summary["total_findings"] += findings
+                        results_summary["scans_completed"].append(f"Nuclei ({findings} findings)")
+                        st.success(f"✅ Nuclei завершено: знайдено {findings} findings")
                     else:
-                        st.warning(f"⚠️ Nuclei: {result.stderr}")
-                        
-            except FileNotFoundError:
-                st.error("❌ Nuclei не встановлено. Встановіть з https://github.com/projectdiscovery/nuclei")
-            except Exception as e:
-                st.error(f"❌ Помилка Nuclei: {e}")
+                        results_summary["scans_failed"].append(f"Nuclei: {result.get('error', 'Unknown error')}")
+                        st.error(f"❌ Помилка Nuclei: {result.get('error')}")
+                        with st.expander("Деталі помилки"):
+                            st.code(result.get("stderr", "No details"))
             
             current_scan += 1
             progress_bar.progress(current_scan / total_scans)
         
-        # SBOM - Trivy
+        # SBOM - Trivy (Docker)
         if run_sbom:
-            status_text.text("📦 Запуск Trivy (SBOM + CVE)...")
+            status_text.text("📦 Запуск Trivy через Docker (SBOM + CVE)...")
             progress_bar.progress(current_scan / total_scans)
             
-            try:
-                # SBOM generation
-                cmd_sbom = [
-                    "trivy",
-                    "fs",
-                    "--format", "cyclonedx",
-                    "--output", str(scan_dir / "sbom.json"),
-                    target_info['path']
-                ]
+            with st.spinner("Сканування Trivy (генерація SBOM та аналіз вразливостей)..."):
+                result = run_trivy_docker(
+                    target_path=Path(target_info['path']),
+                    output_dir=scan_dir,
+                    severity=sbom_severity
+                )
                 
-                with st.spinner("Генерація SBOM..."):
-                    subprocess.run(cmd_sbom, capture_output=True, text=True, timeout=timeout)
-                
-                # Vulnerability scan
-                cmd_vuln = [
-                    "trivy",
-                    "fs",
-                    "--format", "sarif",
-                    "--severity", f"{sbom_severity},CRITICAL" if sbom_severity != "CRITICAL" else "CRITICAL",
-                    "--output", str(scan_dir / "trivy.sarif"),
-                    target_info['path']
-                ]
-                
-                with st.spinner("Сканування вразливостей..."):
-                    result = subprocess.run(cmd_vuln, capture_output=True, text=True, timeout=timeout)
-                
-                if result.returncode == 0:
-                    st.success("✅ Trivy завершено")
+                if result.get("success"):
+                    findings = result.get("findings_count", 0)
+                    results_summary["total_findings"] += findings
+                    results_summary["scans_completed"].append(f"Trivy ({findings} CVEs)")
+                    st.success(f"✅ Trivy завершено: знайдено {findings} вразливостей")
                 else:
-                    st.warning(f"⚠️ Trivy: {result.stderr}")
-                    
-            except FileNotFoundError:
-                st.error("❌ Trivy не встановлено. Встановіть з https://github.com/aquasecurity/trivy")
-            except Exception as e:
-                st.error(f"❌ Помилка Trivy: {e}")
+                    results_summary["scans_failed"].append(f"Trivy: {result.get('error', 'Unknown error')}")
+                    st.error(f"❌ Помилка Trivy: {result.get('error')}")
+                    with st.expander("Деталі помилки"):
+                        st.code(result.get("stderr", "No details"))
             
             current_scan += 1
             progress_bar.progress(1.0)
+        
+        # Save results summary
+        with open(scan_dir / "summary.json", "w", encoding='utf-8') as f:
+            json.dump(results_summary, f, indent=2, ensure_ascii=False)
         
         status_text.text("✅ Всі сканування завершено!")
         st.session_state.scan_running = False
         st.session_state.last_scan_dir = str(scan_dir)
         
+        # Show results
         st.balloons()
         st.success(f"🎉 Сканування завершено! Результати збережено в: `{scan_dir.name}`")
         
         # Show summary
-        st.markdown("### 📊 Короткий звіт")
+        st.markdown("### 📊 Підсумок сканування")
         
-        files = list(scan_dir.glob("*"))
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.metric("Успішні сканування", len(results_summary["scans_completed"]))
+            if results_summary["scans_completed"]:
+                for scan in results_summary["scans_completed"]:
+                    st.success(f"✅ {scan}")
+        
+        with col2:
+            st.metric("Всього знайдено findings", results_summary["total_findings"])
+            if results_summary["scans_failed"]:
+                st.warning(f"Невдалі сканування: {len(results_summary['scans_failed'])}")
+                for scan in results_summary["scans_failed"]:
+                    st.error(f"❌ {scan}")
+        
+        # Show files
+        st.markdown("### 📁 Згенеровані файли")
+        files = sorted(list(scan_dir.glob("*")))
         for file in files:
             if file.suffix in ['.json', '.sarif']:
                 size_kb = file.stat().st_size / 1024
@@ -400,20 +322,71 @@ if scan_root.exists():
         
         for scan in scans:
             config_file = scan / "config.json"
+            summary_file = scan / "summary.json"
+            
             if config_file.exists():
-                with open(config_file) as f:
+                with open(config_file, encoding='utf-8') as f:
                     config = json.load(f)
                 
-                with st.expander(f"📁 {scan.name} - {config.get('target', 'Unknown')}"):
+                # Load summary if exists
+                summary = None
+                if summary_file.exists():
+                    with open(summary_file, encoding='utf-8') as f:
+                        summary = json.load(f)
+                
+                summary_text = ""
+                if summary:
+                    summary_text = f" - {summary.get('total_findings', 0)} findings"
+                
+                with st.expander(f"📁 {scan.name} - {config.get('target', 'Unknown')}{summary_text}"):
                     col1, col2 = st.columns(2)
                     with col1:
+                        st.markdown("**Конфігурація:**")
                         st.json(config)
                     with col2:
-                        files = list(scan.glob("*"))
                         st.markdown("**Файли:**")
+                        files = sorted(list(scan.glob("*")))
                         for file in files:
-                            st.text(f"📄 {file.name}")
+                            size_kb = file.stat().st_size / 1024
+                            st.text(f"📄 {file.name} ({size_kb:.1f} KB)")
+                        
+                        if summary:
+                            st.markdown("**Результати:**")
+                            st.json(summary)
     else:
         st.info("Історія порожня. Запустіть перше сканування!")
 else:
     st.info("Директорія сканувань ще не створена")
+
+# Help section
+with st.expander("ℹ️ Довідка про Docker режим"):
+    st.markdown("""
+    ### Чому Docker?
+    
+    - ✅ **Не потрібно локальне встановлення** Semgrep, Nuclei, Trivy
+    - ✅ **Працює однаково** на Windows, Linux, macOS
+    - ✅ **Ізоляція**: сканери запускаються в окремих контейнерах
+    - ✅ **Портативність**: можна запустити де завгодно з Docker
+    
+    ### Docker образи
+    
+    При першому запуску Docker автоматично завантажить:
+    - `returntocorp/semgrep` (~500 MB)
+    - `projectdiscovery/nuclei` (~100 MB)
+    - `aquasec/trivy` (~200 MB)
+    
+    ### Доступ до локальних додатків
+    
+    Для доступу з Docker контейнера до додатків на хості використовується спеціальний DNS:
+    - `host.docker.internal` - вказує на хост машину
+    - Приклад: `http://host.docker.internal:5001` для Flask app
+    
+    ### Перший запуск
+    
+    При першому запуску кожного сканера Docker:
+    1. Завантажить образ (може зайняти 1-5 хвилин)
+    2. Створить контейнер
+    3. Запустить сканування
+    
+    Наступні запуски будуть значно швидшими.
+    """)

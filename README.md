@@ -10,11 +10,15 @@ VulnRemediate PoC — це прототип системи, що автомат�
 
 ### Можливості
 
-- **🔍 Сканування** - SAST (Semgrep), DAST (Nuclei), SBOM/CVE (Trivy)
+- **🔍 Сканування** - SAST (Semgrep), DAST (Nuclei), SBOM/CVE (Trivy) через Docker
 - **📊 Аналіз** - Нормалізація SARIF, фільтрація, пріоритизація
 - **🔧 Remediation** - Автоматична генерація патчів на основі шаблонів
 - **✅ Тестування** - Sandbox тестування патчів у Docker
 - **📈 Метрики** - Precision, Recall, FPR, Remediation Success Rate
+
+### ⚡ Docker Mode (NEW!)
+
+**Не потрібно локальне встановлення сканерів!** Система автоматично запускає Semgrep, Nuclei та Trivy через Docker контейнери.
 
 ## 🚀 Швидкий старт
 
@@ -24,14 +28,20 @@ VulnRemediate PoC — це прототип системи, що автомат�
 # Python 3.10+
 python --version
 
-# Docker Desktop (для sandbox тестування)
+# Docker Desktop (обов'язково для Docker Mode)
 docker --version
+docker ps  # перевірити що Docker запущений
 
-# Сканери (встановлюються автоматично або вручну)
-pip install semgrep
-# Nuclei: https://github.com/projectdiscovery/nuclei
-# Trivy: https://github.com/aquasecurity/trivy
+# Streamlit та інші Python залежності
+pip install -r requirements.txt
 ```
+
+### ❌ НЕ потрібно встановлювати:
+- ❌ Semgrep локально
+- ❌ Nuclei локально
+- ❌ Trivy локально
+
+Усі сканери запускаються через Docker автоматично! 🎉
 
 ### Встановлення
 
@@ -79,10 +89,12 @@ vulnremediate/
 │       ├── parsers/             # SARIF парсери
 │       └── remediation/         # Генератор патчів
 ├── targets/                      # Вразливі додатки для тестування
-│   └── flask-app/               # Custom Flask app з вразливостями
-│       ├── app.py               # 8+ типів вразливостей
-│       ├── Dockerfile
-│       └── tests/
+│   ├── flask-app/               # Custom Flask app з вразливостями
+│   │   ├── app.py               # 8+ типів вразливостей
+│   │   ├── Dockerfile
+│   │   └── tests/
+│   └── dvwa/                    # DVWA (Damn Vulnerable Web App)
+│       └── vulnerabilities/     # 10+ типів PHP вразливостей
 ├── scans/                        # Результати сканувань (генеруються)
 ├── templates/                    # Jinja2 шаблони патчів
 ├── scripts/                      # CLI скрипти
@@ -125,7 +137,9 @@ vulnremediate/
 - Експорт даних (JSON, CSV)
 - Аналіз ефективності
 
-## 🧪 Vulnerable Flask App
+## 🎯 Targets для сканування
+
+### 1. Vulnerable Flask App (Custom)
 
 Custom Flask додаток містить наступні вразливості:
 
@@ -136,6 +150,31 @@ Custom Flask додаток містить наступні вразливост
 | CWE-22 | Path Traversal | `/file` |
 | CWE-798 | Hardcoded Credentials | `app.py:22` |
 | CWE-327 | Weak Cryptography (MD5) | `/hash` |
+| CWE-78 | Command Injection | `/ping` |
+| CWE-601 | Open Redirect | `/redirect` |
+
+**Доступ:** http://localhost:5001
+
+### 2. DVWA (Damn Vulnerable Web Application)
+
+Industry-standard PHP додаток для тестування security tools:
+
+| Vulnerability | CWE | Files |
+|---------------|-----|-------|
+| SQL Injection | CWE-89 | `vulnerabilities/sqli/` |
+| Blind SQLi | CWE-89 | `vulnerabilities/sqli_blind/` |
+| XSS (Reflected) | CWE-79 | `vulnerabilities/xss_r/` |
+| XSS (Stored) | CWE-79 | `vulnerabilities/xss_s/` |
+| XSS (DOM) | CWE-79 | `vulnerabilities/xss_d/` |
+| Command Injection | CWE-78 | `vulnerabilities/exec/` |
+| File Inclusion | CWE-98 | `vulnerabilities/fi/` |
+| File Upload | CWE-434 | `vulnerabilities/upload/` |
+| CSRF | CWE-352 | `vulnerabilities/csrf/` |
+| Brute Force | CWE-307 | `vulnerabilities/brute/` |
+
+**Доступ:** http://localhost:8080  
+**Login:** admin / password  
+**Детальніше:** `targets/DVWA_INFO.md`
 | CWE-78 | OS Command Injection | `/ping` |
 | CWE-601 | Open Redirect | `/redirect` |
 

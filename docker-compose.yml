@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Vulnerable Flask App
   vulnerable-flask:
@@ -21,12 +19,35 @@ services:
     container_name: vulnremediate-dvwa
     ports:
       - "8080:80"
+    volumes:
+      - ./targets/dvwa:/var/www/html  # Mount DVWA source code (writable for config)
     environment:
       - MYSQL_PASS=password
+      - RECAPTCHA_PRIV_KEY=
+      - RECAPTCHA_PUB_KEY=
+      - DISABLE_AUTHENTICATION=true  # Allow DAST scanners without auth
+      - DEFAULT_SECURITY_LEVEL=low   # Low security for testing
     restart: unless-stopped
+    networks:
+      - vulnremediate-network
+    
+  # MySQL for DVWA
+  dvwa-db:
+    image: mysql:5.7
+    container_name: vulnremediate-dvwa-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=dvwa
+      - MYSQL_USER=dvwa
+      - MYSQL_PASSWORD=p@ssw0rd
+    volumes:
+      - dvwa-db-data:/var/lib/mysql
     networks:
       - vulnremediate-network
 
 networks:
   vulnremediate-network:
     driver: bridge
+
+volumes:
+  dvwa-db-data:

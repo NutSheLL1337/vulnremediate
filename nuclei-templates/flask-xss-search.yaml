@@ -1,0 +1,35 @@
+id: flask-xss-search
+
+info:
+  name: Flask App - Reflected XSS in Search
+  author: vulnremediate
+  severity: high
+  description: Reflected XSS vulnerability in /search endpoint
+  tags: xss,flask,reflected
+  reference:
+    - https://owasp.org/www-community/attacks/xss/
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/search?q=<script>alert('XSS')</script>"
+      - "{{BaseURL}}/search?q=<img%20src=x%20onerror=alert(1)>"
+      - "{{BaseURL}}/search?q=\"><script>alert(document.domain)</script>"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "<script>alert"
+          - "onerror=alert"
+          - "<img src=x"
+        condition: or
+
+      - type: word
+        words:
+          - "text/html"
+        part: header
+
+      - type: status
+        status:
+          - 200

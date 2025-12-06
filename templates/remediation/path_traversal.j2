@@ -1,0 +1,133 @@
+# Path Traversal Remediation
+
+**Vulnerability:** {{ vulnerability.title }}
+**Severity:** {{ vulnerability.severity }}
+**File:** {{ vulnerability.file }}
+**Line:** {{ vulnerability.line }}
+
+## Current Code (Vulnerable)
+
+{% if vulnerability.code_snippet and vulnerability.language != 'http' %}
+```{{ vulnerability.language }}
+{{ vulnerability.code_snippet }}
+```
+{% else %}
+```http
+{{ vulnerability.file }}
+```
+
+**Attack Vector:** Path traversal using `../` sequences to access files outside intended directory.
+{% endif %}
+
+## Recommended Fix
+
+{% if vulnerability.language == 'php' %}
+```php
+// AVOID: Direct file access with user input
+// include($_GET['page']);  // VULNERABLE
+
+// Use whitelist approach
+$allowed_files = ['home.php', 'about.php', 'contact.php'];
+$page = $_GET['page'] ?? 'home.php';
+
+if (in_array($page, $allowed_files)) {
+    include($page);
+} else {
+    // Handle error
+    include('404.php');
+}
+
+// OR use basename() and realpath() validation
+$base_dir = '/var/www/html/pages/';
+$file = basename($_GET['page']);
+$full_path = realpath($base_dir . $file);
+
+// Ensure path is within allowed directory
+if ($full_path && strpos($full_path, $base_dir) === 0) {
+    include($full_path);
+}
+```
+{% elif vulnerability.language == 'python' %}
+```python
+# AVOID: Direct file operations with user input
+# open(user_filename, 'r')  # VULNERABLE
+
+# Use whitelist approach
+import os
+from pathlib import Path
+
+ALLOWED_DIR = Path('/var/www/files')
+filename = request.args.get('file', '')
+
+# Resolve and validate path
+file_path = (ALLOWED_DIR / filename).resolve()
+
+# Ensure path is within allowed directory
+if file_path.is_relative_to(ALLOWED_DIR) and file_path.exists():
+    with open(file_path, 'r') as f:
+        content = f.read()
+```
+{% else %}
+```php
+// AVOID: Direct file access with user input
+// include($_GET['page']);  // VULNERABLE
+
+// Use whitelist approach
+$allowed_files = ['home.php', 'about.php', 'contact.php'];
+$page = $_GET['page'] ?? 'home.php';
+
+if (in_array($page, $allowed_files)) {
+    include($page);
+} else {
+    include('404.php');
+}
+
+// OR use basename() and realpath() validation
+$base_dir = '/var/www/html/pages/';
+$file = basename($_GET['page']);
+$full_path = realpath($base_dir . $file);
+
+if ($full_path && strpos($full_path, $base_dir) === 0) {
+    include($full_path);
+}
+```
+{% endif %}
+
+## Explanation
+
+{{ vulnerability.description }}
+
+**Why this works:**
+- Whitelist restricts files to known-safe set
+- `realpath()` resolves `../` sequences
+- Path validation ensures files stay in allowed directory
+
+## Dangerous Patterns
+
+```
+../../../etc/passwd
+..\..\..\..\windows\system32\config\sam
+....//....//etc/passwd
+%2e%2e%2f%2e%2e%2f
+```
+
+## Additional Recommendations
+
+1. **Whitelist Only:** Never use blacklist for path validation
+2. **No Direct User Input:** Map user input to safe filenames
+3. **Chroot Jails:** Use restricted filesystem views
+4. **Access Controls:** Implement proper file permissions
+
+## Validation Steps
+
+1. Normalize path (resolve `../`)
+2. Convert to absolute path
+3. Verify prefix matches allowed directory
+4. Check file exists and is readable
+5. Verify file type if applicable
+
+## References
+
+- OWASP Path Traversal Prevention Cheat Sheet
+- CWE-22: Improper Limitation of a Pathname to a Restricted Directory
+- {{ vulnerability.owasp_reference if vulnerability.owasp_reference else 'OWASP Top 10 - A01:2021 Broken Access Control' }}
