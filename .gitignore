@@ -70,3 +70,7 @@ credentials*.yml
 >>>>>>> demo/autofix-low-sql-demo
 dvwa-src/
 juice-shop-src/
+
+# Scan results and databases
+scans/
+*.db

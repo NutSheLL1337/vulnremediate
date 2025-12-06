@@ -1,0 +1,35 @@
+id: dvwa-xss-reflected
+
+info:
+  name: DVWA - Reflected XSS (Low Security)
+  author: vulnremediate
+  severity: high
+  description: Reflected XSS in DVWA XSS Reflected module
+  tags: xss,dvwa,php,reflected
+  reference:
+    - https://github.com/digininja/DVWA
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/vulnerabilities/xss_r/?name=<script>alert(1)</script>"
+      - "{{BaseURL}}/vulnerabilities/xss_r/?name=<img%20src=x%20onerror=alert(document.domain)>"
+      - "{{BaseURL}}/vulnerabilities/xss_r/?name=\"><svg/onload=alert('XSS')>"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "<script>alert"
+          - "onerror=alert"
+          - "onload=alert"
+        condition: or
+
+      - type: word
+        words:
+          - "Hello"
+        part: body
+
+      - type: status
+        status:
+          - 200

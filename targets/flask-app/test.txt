@@ -1,0 +1,2 @@
+This is a test file for path traversal demonstration.
+You should only see this content when accessing test.txt

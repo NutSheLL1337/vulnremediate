@@ -1,0 +1,78 @@
+# SQL Injection Remediation
+
+**Vulnerability:** {{ vulnerability.title }}
+**Severity:** {{ vulnerability.severity }}
+**File:** {{ vulnerability.file }}
+**Line:** {{ vulnerability.line }}
+
+## Current Code (Vulnerable)
+
+{% if vulnerability.code_snippet and vulnerability.language != 'http' %}
+```{{ vulnerability.language }}
+{{ vulnerability.code_snippet }}
+```
+{% else %}
+```http
+{{ vulnerability.file }}
+```
+
+**Attack Vector:** SQL injection via user input in URL parameters or form fields.
+{% endif %}
+
+## Recommended Fix
+
+{% if vulnerability.language == 'php' %}
+```php
+// Use prepared statements instead of string concatenation
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+```
+{% elif vulnerability.language == 'python' %}
+```python
+# Use parameterized queries
+cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+# OR use an ORM like SQLAlchemy
+user = User.query.filter_by(id=user_id).first()
+```
+{% else %}
+```php
+// Use prepared statements instead of string concatenation
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Alternative for MySQLi
+$id = $mysqli->real_escape_string($_GET['id']);
+$query = "SELECT * FROM users WHERE id = '" . $id . "'";
+
+// BEST: Use PDO with prepared statements
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
+$stmt->execute(['id' => $id]);
+$result = $stmt->fetchAll();
+```
+{% endif %}
+
+## Explanation
+
+{{ vulnerability.description }}
+
+**Why this works:**
+- Prepared statements separate SQL logic from data
+- User input is treated as data, not executable code
+- Database engine handles proper escaping automatically
+
+## Additional Recommendations
+
+1. **Input Validation:** Validate and sanitize all user inputs
+2. **Least Privilege:** Use database accounts with minimal permissions
+3. **WAF:** Consider using Web Application Firewall rules
+4. **Monitoring:** Log and monitor for SQL injection attempts
+
+## References
+
+- OWASP SQL Injection Prevention Cheat Sheet
+- CWE-89: Improper Neutralization of Special Elements used in an SQL Command
+- {{ vulnerability.owasp_reference if vulnerability.owasp_reference else 'OWASP Top 10 - A03:2021 Injection' }}

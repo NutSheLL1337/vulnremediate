@@ -1,0 +1,104 @@
+# Command Injection Remediation
+
+**Vulnerability:** {{ vulnerability.title }}
+**Severity:** {{ vulnerability.severity }}
+**File:** {{ vulnerability.file }}
+**Line:** {{ vulnerability.line }}
+
+## Current Code (Vulnerable)
+
+{% if vulnerability.code_snippet and vulnerability.language != 'http' %}
+```{{ vulnerability.language }}
+{{ vulnerability.code_snippet }}
+```
+{% else %}
+```http
+{{ vulnerability.file }}
+```
+
+**Attack Vector:** User input passed to system commands without validation.
+{% endif %}
+
+## Recommended Fix
+
+{% if vulnerability.language == 'php' %}
+```php
+// AVOID: Using shell_exec, exec, system with user input
+// shell_exec("ping " . $ip);  // VULNERABLE
+
+// BETTER: Use escapeshellarg() if shell is necessary
+$ip = escapeshellarg($ip);
+$output = shell_exec("ping -c 4 " . $ip);
+
+// BEST: Avoid shell entirely, use native functions
+// For ping, use socket functions or external library
+// For file operations, use PHP file functions
+```
+{% elif vulnerability.language == 'python' %}
+```python
+# AVOID: Using os.system or shell=True with user input
+# os.system(f"ping {ip}")  # VULNERABLE
+
+# BETTER: Use subprocess with argument list (no shell)
+import subprocess
+result = subprocess.run(['ping', '-c', '4', ip], capture_output=True)
+
+# BEST: Use libraries that don't invoke shell
+# For network operations, use socket library
+```
+{% else %}
+```php
+// AVOID: Using shell_exec, exec, system with user input
+// shell_exec("ping " . $_POST['ip']);  // VULNERABLE
+
+// BETTER: Use escapeshellarg() if shell is necessary
+$ip = escapeshellarg($_POST['ip']);
+$output = shell_exec("ping -c 4 " . $ip);
+
+// BEST: Validate input with whitelist
+$ip = $_POST['ip'];
+if (filter_var($ip, FILTER_VALIDATE_IP)) {
+    $output = shell_exec("ping -c 4 " . escapeshellarg($ip));
+} else {
+    die("Invalid IP address");
+}
+```
+{% endif %}
+
+## Explanation
+
+{{ vulnerability.description }}
+
+**Why this works:**
+- Argument lists prevent shell interpretation
+- No shell metacharacters are processed
+- Commands and arguments are separated explicitly
+
+## Shell Metacharacters to Block
+
+```
+; | & $ ` \ ! > < ( ) [ ] { } * ? ~ # ^ " '
+```
+
+## Additional Recommendations
+
+1. **Whitelist Validation:** Only allow expected input patterns
+2. **Avoid Shell:** Use language-native functions instead
+3. **Least Privilege:** Run with minimal system permissions
+4. **Sandboxing:** Use containers or restricted environments
+
+## Safe Alternatives
+
+| Dangerous Function | Safe Alternative |
+|-------------------|------------------|
+| `shell_exec()` | Native PHP functions |
+| `exec()` | Parameterized execution |
+| `system()` | Library functions |
+| `os.system()` | `subprocess.run()` with list |
+| `eval()` | Never use with user input |
+
+## References
+
+- OWASP Command Injection Prevention Cheat Sheet
+- CWE-78: OS Command Injection
+- {{ vulnerability.owasp_reference if vulnerability.owasp_reference else 'OWASP Top 10 - A03:2021 Injection' }}

